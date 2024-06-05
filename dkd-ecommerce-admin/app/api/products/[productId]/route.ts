@@ -1,4 +1,5 @@
 import Collection from "@/lib/models/Collection";
+import Category from "@/lib/models/Category";
 import Product from "@/lib/models/Product";
 import { connectToDB } from "@/lib/mongoDB";
 import { auth } from "@clerk/nextjs";
@@ -12,10 +13,15 @@ export const GET = async (
   try {
     await connectToDB();
 
-    const product = await Product.findById(params.productId).populate({
-      path: "collections",
-      model: Collection,
-    });
+    const product = await Product.findById(params.productId)
+      .populate({
+        path: "collections",
+        model: Collection,
+      })
+      .populate({
+        path: "category",
+        model: Category,
+      });
 
     if (!product) {
       return new NextResponse(
@@ -67,12 +73,11 @@ export const POST = async (
       collections,
       tags,
       sizes,
-      colors,
       price,
-      expense,
+      stocks,
     } = await req.json();
 
-    if (!title || !description || !media || !category || !price || !expense) {
+    if (!title || !description || !media || !category || !price || !stocks) {
       return new NextResponse("Not enough data to create a new product", {
         status: 400,
       });
@@ -81,25 +86,36 @@ export const POST = async (
     const addedCollections = collections.filter(
       (collectionId: string) => !product.collections.includes(collectionId)
     );
-    // included in new data, but not included in the previous data
-
     const removedCollections = product.collections.filter(
       (collectionId: string) => !collections.includes(collectionId)
     );
-    // included in previous data, but not included in the new data
 
-    // Update collections
+    const addedCategory = category.filter(
+      (categoryId: string) => !product.category.includes(categoryId)
+    );
+    const removedCategory = product.category.filter(
+      (categoryId: string) => !category.includes(categoryId)
+    );
+
     await Promise.all([
-      // Update added collections with this product
       ...addedCollections.map((collectionId: string) =>
         Collection.findByIdAndUpdate(collectionId, {
           $push: { products: product._id },
         })
       ),
-
-      // Update removed collections without this product
       ...removedCollections.map((collectionId: string) =>
         Collection.findByIdAndUpdate(collectionId, {
+          $pull: { products: product._id },
+        })
+      ),
+
+      ...addedCategory.map((categoryId: string) =>
+        Category.findByIdAndUpdate(categoryId, {
+          $push: { products: product._id },
+        })
+      ),
+      ...removedCategory.map((categoryId: string) =>
+        Category.findByIdAndUpdate(categoryId, {
           $pull: { products: product._id },
         })
       ),
@@ -116,9 +132,8 @@ export const POST = async (
         collections,
         tags,
         sizes,
-        colors,
         price,
-        expense,
+        stocks,
       },
       { new: true }
     ).populate({ path: "collections", model: Collection });
@@ -157,13 +172,18 @@ export const DELETE = async (
     await Product.findByIdAndDelete(product._id);
 
     // Update collections
-    await Promise.all(
-      product.collections.map((collectionId: string) =>
+    await Promise.all([
+      ...product.collections.map((collectionId: string) =>
         Collection.findByIdAndUpdate(collectionId, {
           $pull: { products: product._id },
         })
+      ),
+      ...product.category.map((categoryId: string) =>
+        Category.findByIdAndUpdate(categoryId, {
+          $pull: { products: product._id },
+        })
       )
-    );
+    ]);    
 
     return new NextResponse(JSON.stringify({ message: "Product deleted" }), {
       status: 200,
@@ -175,4 +195,3 @@ export const DELETE = async (
 };
 
 export const dynamic = "force-dynamic";
-

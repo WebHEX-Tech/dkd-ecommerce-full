@@ -20,6 +20,10 @@ export const columns: ColumnDef<ProductType>[] = [
   {
     accessorKey: "category",
     header: "Category",
+    cell: ({ row }) => {
+      console.log(row.original.category);
+      return row.original.category.map((category) => category.title).join(", ");
+    },
   },
   {
     accessorKey: "collections",
@@ -31,8 +35,8 @@ export const columns: ColumnDef<ProductType>[] = [
     header: "Price (₱)",
   },
   {
-    accessorKey: "expense",
-    header: "Expense (₱)",
+    accessorKey: "stocks",
+    header: "Stocks",
   },
   {
     id: "actions",

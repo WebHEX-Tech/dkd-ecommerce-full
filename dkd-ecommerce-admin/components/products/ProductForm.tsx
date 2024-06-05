@@ -29,13 +29,12 @@ const formSchema = z.object({
   title: z.string().min(2).max(50),
   description: z.string().min(2).max(500).trim(),
   media: z.array(z.string()),
-  category: z.string(),
+  category: z.array(z.string()),
   collections: z.array(z.string()),
   tags: z.array(z.string()),
   sizes: z.array(z.string()),
-  colors: z.array(z.string()),
   price: z.coerce.number().min(0.1),
-  expense: z.coerce.number().min(0.1),
+  stocks: z.coerce.number(),
 });
 
 interface ProductFormProps {
@@ -47,6 +46,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
 
   const [loading, setLoading] = useState(true);
   const [collections, setCollections] = useState<CollectionType[]>([]);
+  const [category, setCategory] = useState<CategoryType[]>([]);
 
   const getCollections = async () => {
     try {
@@ -66,6 +66,24 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     getCollections();
   }, []);
 
+  const getCategory = async () => {
+    try {
+      const res = await fetch("/api/category", {
+        method: "GET",
+      });
+      const data = await res.json();
+      setCategory(data);
+      setLoading(false);
+    } catch (err) {
+      console.log("[category_GET]", err);
+      toast.error("Something went wrong! Please try again.");
+    }
+  };
+
+  useEffect(() => {
+    getCategory();
+  }, []);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData
@@ -74,18 +92,18 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
           collections: initialData.collections.map(
             (collection) => collection._id
           ),
+          category: initialData.category.map((category) => category._id),
         }
       : {
           title: "",
           description: "",
           media: [],
-          category: "",
+          category: [],
           collections: [],
           tags: [],
           sizes: [],
-          colors: [],
           price: 0.1,
-          expense: 0.1,
+          stocks: 0,
         },
   });
 
@@ -214,14 +232,14 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
             />
             <FormField
               control={form.control}
-              name="expense"
+              name="stocks"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Expense (₱)</FormLabel>
+                  <FormLabel>Stocks</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="Expense"
+                      placeholder="Stocks"
                       {...field}
                       onKeyDown={handleKeyPress}
                     />
@@ -230,23 +248,35 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Category</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Category"
-                      {...field}
-                      onKeyDown={handleKeyPress}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-1" />
-                </FormItem>
-              )}
-            />
+            {category.length > 0 && (
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <FormControl>
+                      <MultiSelect
+                        placeholder="Category"
+                        options={category}
+                        value={field.value}
+                        onChange={(_id) =>
+                          field.onChange([...field.value, _id])
+                        }
+                        onRemove={(idToRemove) =>
+                          field.onChange([
+                            ...field.value.filter(
+                              (categoryId) => categoryId !== idToRemove
+                            ),
+                          ])
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
               name="tags"
@@ -279,7 +309,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                     <FormControl>
                       <MultiSelect
                         placeholder="Collections"
-                        collections={collections}
+                        options={collections}
                         value={field.value}
                         onChange={(_id) =>
                           field.onChange([...field.value, _id])
@@ -298,32 +328,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 )}
               />
             )}
-            <FormField
-              control={form.control}
-              name="colors"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Colors</FormLabel>
-                  <FormControl>
-                    <MultiText
-                      placeholder="Colors"
-                      value={field.value}
-                      onChange={(color) =>
-                        field.onChange([...field.value, color])
-                      }
-                      onRemove={(colorToRemove) =>
-                        field.onChange([
-                          ...field.value.filter(
-                            (color) => color !== colorToRemove
-                          ),
-                        ])
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-1" />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="sizes"

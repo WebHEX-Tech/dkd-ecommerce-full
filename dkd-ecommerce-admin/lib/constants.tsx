@@ -1,6 +1,7 @@
 import {
   LayoutDashboard,
   Shapes,
+  Layers3,
   ShoppingBag,
   Tag,
   UsersRound,
@@ -16,6 +17,11 @@ export const navLinks = [
     url: "/collections",
     icon: <Shapes />,
     label: "Collections",
+  },
+  {
+    url: "/category",
+    icon: <Layers3 />,
+    label: "Categories",
   },
   {
     url: "/products",

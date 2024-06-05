@@ -6,18 +6,23 @@ type CollectionType = {
   products: ProductType[];
 }
 
+type CategoryType = {
+  _id: string;
+  title: string;
+  products: ProductType[];
+}
+
 type ProductType = {
   _id: string;
   title: string;
   description: string;
   media: [string];
-  category: string;
-  collections: [CollectionType];
+  category: CategoryType[];
+  collections: CollectionType[];
   tags: [string];
   sizes: [string];
-  colors: [string];
   price: number;
-  expense: number;
+  stocks: number;
   createdAt: Date;
   updatedAt: Date;
 }
