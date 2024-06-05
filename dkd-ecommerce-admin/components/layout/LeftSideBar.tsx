@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
@@ -11,16 +11,19 @@ const LeftSideBar = () => {
   const pathname = usePathname();
 
   return (
-    <div className="h-screen left-0 top-0 sticky p-10 flex flex-col gap-16 bg-blue-2 shadow-xl max-lg:hidden">
-      <Image src="/logo.png" alt="logo" width={150} height={70} />
+    <div className="h-screen left-0 top-0 sticky p-0 flex flex-col gap-6 bg-blue-2 shadow-xl max-lg:hidden">
+      <div className="flex flex-col justify-center items-center py-5">
+        <h2 className="font-bold">Admin</h2>
+        <Image src="/logo.png" alt="logo" width={150} height={70} />
+      </div>
 
-      <div className="flex flex-col gap-12">
+      <div className="flex flex-col gap-1">
         {navLinks.map((link) => (
           <Link
             href={link.url}
             key={link.label}
-            className={`flex gap-4 text-body-medium ${
-              pathname === link.url ? "text-blue-1" : "text-grey-1"
+            className={`flex gap-4 px-10 py-4 text-body-medium ${
+              pathname === link.url ? "text-white-1 bg-blue-1" : "text-grey-1"
             }`}
           >
             {link.icon} <p>{link.label}</p>
@@ -28,7 +31,7 @@ const LeftSideBar = () => {
         ))}
       </div>
 
-      <div className="flex gap-4 text-body-medium items-center">
+      <div className="flex gap-4 px-10 py-4 text-body-medium items-center">
         <UserButton />
         <p>Edit Profile</p>
       </div>
