@@ -27,24 +27,24 @@ const Navbar = () => {
       <div className="flex gap-4 text-base-bold max-lg:hidden">
         <Link
           href="/"
-          className={`hover:text-red-1 ${
-            pathname === "/" && "text-red-1"
+          className={`hover:text-red-1 hover:underline ${
+            pathname === "/" && "text-red-1 underline"
           }`}
         >
           Home
         </Link>
         <Link
           href={user ? "/wishlist" : "/sign-in"}
-          className={`hover:text-red-1 ${
-            pathname === "/wishlist" && "text-red-1"
+          className={`hover:text-red-1 hover:underline ${
+            pathname === "/wishlist" && "text-red-1 underline"
           }`}
         >
           Wishlist
         </Link>
         <Link
           href={user ? "/orders" : "/sign-in"}
-          className={`hover:text-red-1 ${
-            pathname === "/orders" && "text-red-1"
+          className={`hover:text-red-1 hover:underline ${
+            pathname === "/orders" && "text-red-1 underline"
           }`}
         >
           Orders

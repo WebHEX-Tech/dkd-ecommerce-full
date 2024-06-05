@@ -12,15 +12,23 @@ const CollectionDetails = async ({
 
   return (
     <div className="px-10 py-5 flex flex-col items-center gap-8">
-      <Image
-        src={collectionDetails.image}
-        width={1500}
-        height={1000}
-        alt="collection"
-        className="w-full h-[400px] object-cover rounded-xl"
-      />
-      <p className="text-heading3-bold text-grey-2">{collectionDetails.title}</p>
-      <p className="text-body-normal text-grey-2 text-center max-w-[900px]">{collectionDetails.description}</p>
+      <div className="flex flex-row gap-3 items-center border-grey-1 border-b pb-6">
+        <Image
+          src={collectionDetails.image}
+          width={350}
+          height={400}
+          alt="collection"
+          className="w-max h-[280px] object-cover rounded-xl"
+        />
+        <p className="text-xl text-black text-left max-w-[900px]">
+          {collectionDetails.description}
+        </p>
+      </div>
+      
+      <p className="text-heading2-bold text-blue-3">
+        {collectionDetails.title}
+      </p>
+
       <div className="flex flex-wrap gap-16 justify-center">
         {collectionDetails.products.map((product: ProductType) => (
           <ProductCard key={product._id} product={product} />
@@ -33,4 +41,3 @@ const CollectionDetails = async ({
 export default CollectionDetails;
 
 export const dynamic = "force-dynamic";
-

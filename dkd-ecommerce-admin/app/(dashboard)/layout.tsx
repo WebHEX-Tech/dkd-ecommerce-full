@@ -10,7 +10,7 @@ import { ToasterProvider } from "@/lib/ToasterProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "DKD Food Solutions - Admin Dashboard",
+  title: "DKD Food Solutions - Admin",
   description: "Admin dashboard to manage DKD's data",
 };
 
