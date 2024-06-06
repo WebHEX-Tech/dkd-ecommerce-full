@@ -22,7 +22,7 @@ const ProductDetails = ({ params }: { params: { productId: string }}) => {
   }
 
   useEffect(() => {
-    getProductDetails()
+    getProductDetails();
   }, [])
 
   return loading ? <Loader /> : (

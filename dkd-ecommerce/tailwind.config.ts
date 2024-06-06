@@ -1,12 +1,21 @@
 import type { Config } from "tailwindcss";
 
-const config: Config = {
+const config = {
+  darkMode: ["class"],
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     fontSize: {
       "heading1-bold": [
         "50px",
@@ -71,25 +80,12 @@ const config: Config = {
           fontWeight: "500",
         },
       ],
-      "small-bold": [
-        "14px",
-        {
-          lineHeight: "140%",
-          fontWeight: "700",
-        },
-      ],
-      "small-medium": [
-        "14px",
-        {
-          lineHeight: "140%",
-          fontWeight: "500",
-        },
-      ],
     },
     extend: {
       colors: {
         "white-1": "#D4F1F4",
-        "white-2": "#DFC0A7",
+        "grey-1": "#616161",
+        "grey-2": "#E5E7EB",
         "blue-1": "#05445E",
         "blue-2": "#75E6DA",
         "blue-3": "#189AB4",
@@ -97,12 +93,27 @@ const config: Config = {
         "red-2": "#e98280",
         "red-3": "#dc5957",
         "red-4": "#c83c3a",
-        "grey-1": "#E5E7EB",
-        "grey-2": "#717171",
+        "red-5": "#f8d1d0",
+        "red-6": "#742928",
+        "red-7": "#f2b0af",
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },
-  plugins: [require("tailwind-scrollbar-hide")],
-};
-export default config;
+  plugins: [require("tailwindcss-animate")],
+} satisfies Config;
 
+export default config;

@@ -8,6 +8,16 @@ export const getCollectionDetails = async (collectionId: string) => {
   return await collection.json()
 }
 
+export const getCategory = async () => {
+  const category = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category`)
+  return await category.json()
+}
+
+export const getCategoryDetails = async (categoryId: string) => {
+  const category = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category/${categoryId}`)
+  return await category.json()
+}
+
 export const getProducts = async () => {
   const products = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`)
   return await products.json()

@@ -5,6 +5,7 @@ const config: Config = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{ts,tsx}",
   ],
   theme: {
     fontSize: {
@@ -81,6 +82,11 @@ const config: Config = {
         "blue-2": "#75E6DA",
         "blue-3": "#189AB4",
         "red-1": "#9E2D2B",
+        "red-2": "#e98280",
+        "red-3": "#dc5957",
+        "red-4": "#c83c3a",
+        "red-5": "#f8d1d0",
+        "red-6": "#742928",
       },
     },
   },

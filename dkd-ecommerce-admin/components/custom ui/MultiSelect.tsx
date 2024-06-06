@@ -62,7 +62,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
 
       <div className="relative mt-2">
         {open && (
-          <CommandGroup className="absolute w-full z-30 top-0 overflow-auto border rounded-md shadow-md">
+          <CommandGroup className="absolute bg-grey-2 w-full z-30 top-0 overflow-auto border rounded-md shadow-md">
             {selectables.map((option) => (
               <CommandItem
                 key={option._id}
@@ -71,7 +71,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                   onChange(option._id);
                   setInputValue("");
                 }}
-                className="hover:bg-grey-2 cursor-pointer"
+                className="hover:bg-blue-2 cursor-pointer"
               >
                 {option.title}
               </CommandItem>

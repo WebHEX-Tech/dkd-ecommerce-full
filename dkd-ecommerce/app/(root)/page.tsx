@@ -6,7 +6,15 @@ import Image from "next/image";
 export default function Home() {
   return (
     <>
-      <Image src="/DKD-banner.png" alt="banner" width={2000} height={1000} className="w-screen shadow-lg" />
+      <div>
+        <img
+          src="/DKD-banner.png"
+          alt="banner"
+          width={2000}
+          height={1000}
+          className="w-fit h-full shadow-lg"
+        />
+      </div>
       <Collections />
       <ProductList />
     </>
@@ -14,4 +22,3 @@ export default function Home() {
 }
 
 export const dynamic = "force-dynamic";
-

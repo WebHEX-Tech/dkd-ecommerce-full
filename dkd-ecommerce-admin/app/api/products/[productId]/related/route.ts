@@ -14,8 +14,8 @@ export const GET = async (req: NextRequest, { params }: { params: { productId: s
 
     const relatedProducts = await Product.find({
       $or: [
-        { category: product.category },
-        { collections: { $in: product.collections }}
+        { category: { $in: product.category }},
+        { collections: { $in: product.collections }},
       ],
       _id: { $ne: product._id } // Exclude the current product
     })

@@ -136,7 +136,9 @@ export const POST = async (
         stocks,
       },
       { new: true }
-    ).populate({ path: "collections", model: Collection });
+    )
+      .populate({ path: "collections", model: Collection })
+      .populate({ path: "category", model: Category });
 
     await updatedProduct.save();
 
@@ -182,8 +184,8 @@ export const DELETE = async (
         Category.findByIdAndUpdate(categoryId, {
           $pull: { products: product._id },
         })
-      )
-    ]);    
+      ),
+    ]);
 
     return new NextResponse(JSON.stringify({ message: "Product deleted" }), {
       status: 200,
