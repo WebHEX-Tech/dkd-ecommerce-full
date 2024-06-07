@@ -22,20 +22,20 @@ const ProductInfo = ({ productInfo }: { productInfo: ProductType }) => {
       </div>
 
       <div className="flex gap-2">
-        <p className="text-base-medium text-grey-2">Category:</p>
+        <p className="text-base-medium text-grey-1">Category:</p>
         <p className="text-base-bold">{productInfo.category[0].title}</p>
       </div>
 
       <p className="text-heading3-bold">₱ {productInfo.price.toFixed(2)}</p>
 
       <div className="flex flex-col gap-2">
-        <p className="text-base-medium text-grey-2">Description:</p>
+        <p className="text-base-medium text-grey-1">Description:</p>
         <p className="text-small-medium">{productInfo.description}</p>
       </div>
 
       {productInfo.sizes.length > 0 && (
         <div className="flex flex-col gap-2">
-          <p className="text-base-medium text-grey-2">Sizes:</p>
+          <p className="text-base-medium text-grey-1">Sizes:</p>
           <div className="flex gap-2">
             {productInfo.sizes.map((size, index) => (
               <p
@@ -53,7 +53,7 @@ const ProductInfo = ({ productInfo }: { productInfo: ProductType }) => {
       )}
 
       <div className="flex flex-col gap-2">
-        <p className="text-base-medium text-grey-2">Quantity:</p>
+        <p className="text-base-medium text-grey-1">Quantity:</p>
         <div className="flex gap-4 items-center">
           <MinusCircle
             className="hover:text-red-1 cursor-pointer"

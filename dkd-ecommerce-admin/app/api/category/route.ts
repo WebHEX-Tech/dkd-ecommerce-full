@@ -14,7 +14,7 @@ export const POST = async (req: NextRequest) => {
 
     await connectToDB()
 
-    const { title } = await req.json()
+    const { title, collections } = await req.json()
 
     const existingCategory = await Category.findOne({ title })
 
@@ -27,7 +27,7 @@ export const POST = async (req: NextRequest) => {
     }
 
     const newCategory = await Category.create({
-      title,
+      title, collections,
     })
 
     await newCategory.save()

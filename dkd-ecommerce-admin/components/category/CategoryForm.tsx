@@ -15,32 +15,57 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import MultiSelect from "../custom ui/MultiSelect";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "../ui/textarea";
-import ImageUpload from "../custom ui/ImageUpload";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Delete from "../custom ui/Delete";
 
 const formSchema = z.object({
   title: z.string().min(2).max(50),
+  collections: z.array(z.string()),
 });
 
 interface CategoryFormProps {
-  initialData?: CategoryType | null; //Must have "?" to make it optional
+  initialData?: CategoryType | null; 
 }
 
 const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
+  const [collections, setCollections] = useState<CollectionType[]>([]);
+
+  const getCollections = async () => {
+    try {
+      const res = await fetch("/api/collections", {
+        method: "GET",
+      });
+      const data = await res.json();
+      setCollections(data);
+      setLoading(false);
+    } catch (err) {
+      console.log("[collections_GET]", err);
+      toast.error("Something went wrong! Please try again.");
+    }
+  };
+
+  useEffect(() => {
+    getCollections();
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData
-      ? initialData
+      ? {
+        ...initialData,
+        collections: initialData.collections.map(
+          (collection) => collection._id
+        ),
+      }
       : {
           title: "",
+          collections: [],
         },
   });
 
@@ -98,6 +123,35 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
               </FormItem>
             )}
           />
+          {collections.length > 0 && (
+              <FormField
+                control={form.control}
+                name="collections"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Collections</FormLabel>
+                    <FormControl>
+                      <MultiSelect
+                        placeholder="Collections"
+                        options={collections}
+                        value={field.value}
+                        onChange={(_id) =>
+                          field.onChange([...field.value, _id])
+                        }
+                        onRemove={(idToRemove) =>
+                          field.onChange([
+                            ...field.value.filter(
+                              (collectionId) => collectionId !== idToRemove
+                            ),
+                          ])
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            )}
           <div className="flex gap-10">
             <Button type="submit" className="bg-blue-1 text-white">
               Submit

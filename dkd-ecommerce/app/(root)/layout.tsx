@@ -3,8 +3,9 @@ import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "../globals.css";
 import Navbar from "@/components/Navbar";
+import BackToTopButton from "@/components/BackToTopButton";
 import ToasterProvider from "@/lib/providers/ToasterProvider";
-import { getCollections } from "@/lib/actions/actions";
+import { getCategory, getCollections } from "@/lib/actions/actions";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,14 +21,16 @@ export default async function RootLayout({
 }>) {
 
   const collections: CollectionType[] = await getCollections();
+  const category: CategoryType[] = await getCategory();
 
   return (
     <html lang="en">
       <body className={inter.className}>
         <ClerkProvider>
           <ToasterProvider />
-          <Navbar collections={collections}/>
+          <Navbar collections={collections} category={category}/>
           {children}
+          <BackToTopButton />
         </ClerkProvider>
       </body>
     </html>

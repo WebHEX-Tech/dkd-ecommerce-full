@@ -18,6 +18,10 @@ export const columns: ColumnDef<CategoryType>[] = [
     ),
   },
   {
+    accessorKey: "collections",
+    header: "Collections",
+  },
+  {
     accessorKey: "products",
     header: "Products",
     cell: ({ row }) => <p>{row.original.products.length}</p>,

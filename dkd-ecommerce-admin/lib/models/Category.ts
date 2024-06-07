@@ -12,6 +12,12 @@ const categorySchema = new mongoose.Schema({
       ref: "Product",
     },
   ],
+  collections: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Collection",
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
