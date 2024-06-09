@@ -46,6 +46,10 @@ const CollectionDetails = async ({
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
+              <span className="text-grey-1">Collections</span>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
               <span className="text-grey-1">{collectionDetails.title}</span>
             </BreadcrumbItem>
           </BreadcrumbList>

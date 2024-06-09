@@ -20,6 +20,10 @@ export const columns: ColumnDef<CategoryType>[] = [
   {
     accessorKey: "collections",
     header: "Collections",
+    cell: ({ row }) => {
+      console.log(row.original.collections);
+      return row.original.collections.map((collection) => collection.title).join(", ");
+    },
   },
   {
     accessorKey: "products",

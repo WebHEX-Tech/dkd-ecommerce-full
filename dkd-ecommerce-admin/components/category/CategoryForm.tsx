@@ -36,6 +36,8 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
   const [loading, setLoading] = useState(false);
   const [collections, setCollections] = useState<CollectionType[]>([]);
 
+  console.log(collections)
+
   const getCollections = async () => {
     try {
       const res = await fetch("/api/collections", {
@@ -87,7 +89,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
       });
       if (res.ok) {
         setLoading(false);
-        toast.success(`Category ${initialData ? "updated" : "created"}`);
+        toast.success(`Category ${initialData ? "Updated" : "Created"}`);
         window.location.href = "/category";
         router.push("/category");
       }
@@ -123,6 +125,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
               </FormItem>
             )}
           />
+          
           {collections.length > 0 && (
               <FormField
                 control={form.control}
@@ -132,7 +135,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
                     <FormLabel>Collections</FormLabel>
                     <FormControl>
                       <MultiSelect
-                        placeholder="Collections"
+                        placeholder="Select Collections"
                         options={collections}
                         value={field.value}
                         onChange={(_id) =>

@@ -92,8 +92,8 @@ export const DELETE = async (
     await Category.findByIdAndDelete(params.categoryId);
 
     await Product.updateMany(
-      { categorys: params.categoryId },
-      { $pull: { categorys: params.categoryId } }
+      { category: params.categoryId },
+      { $pull: { category: params.categoryId } }
     );
     
     return new NextResponse("category is deleted", { status: 200 });
