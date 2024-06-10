@@ -16,10 +16,6 @@ export const GET = async (
     const category = await Category.findById(params.categoryId).populate({
         path: "products",
         model: Product,
-        populate: {
-          path: "collections",
-          model: Collection
-        }
       });
 
     if (!category) {
