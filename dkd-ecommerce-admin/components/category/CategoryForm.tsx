@@ -43,14 +43,19 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
       const res = await fetch("/api/collections", {
         method: "GET",
       });
+      if (!res.ok) {
+        throw new Error("Failed to fetch collections");
+      }
       const data = await res.json();
       setCollections(data);
       setLoading(false);
     } catch (err) {
       console.log("[collections_GET]", err);
-      toast.error("Something went wrong! Please try again.");
+      setLoading(false);
+      toast.error("Failed to fetch collections. Please try again.");
     }
   };
+  
 
   useEffect(() => {
     getCollections();
@@ -80,12 +85,13 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setLoading(true);
-      const url = initialData
-        ? `/api/category/${initialData._id}`
-        : "/api/category";
+      const url = initialData ? `/api/category/${initialData._id}` : "/api/category";
       const res = await fetch(url, {
         method: "POST",
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          collections: values.collections.map(collectionId => ({ _id: collectionId })),
+        }),
       });
       if (res.ok) {
         setLoading(false);
@@ -98,6 +104,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
       toast.error("Something went wrong! Please try again.");
     }
   };
+  
 
   return (
     <div className="p-10">

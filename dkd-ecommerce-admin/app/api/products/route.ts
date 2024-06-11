@@ -1,6 +1,5 @@
 import { auth } from "@clerk/nextjs";
 import { NextRequest, NextResponse } from "next/server";
-
 import { connectToDB } from "@/lib/mongoDB";
 import Product from "@/lib/models/Product";
 import Collection from "@/lib/models/Collection";
@@ -28,13 +27,11 @@ export const POST = async (req: NextRequest) => {
       stocks,
     } = await req.json();
 
-    if (!title || !description || !media || !category || !price || !stocks) {
-      return new NextResponse("Not enough data to create a product", {
-        status: 400,
-      });
+    if (!title || !description || !media || !Array.isArray(category) || price === null || stocks === null) {
+      return new NextResponse("Incomplete product data", { status: 400 });
     }
 
-    const newProduct = await Product.create({
+    const newProduct = new Product({
       title,
       description,
       media,
@@ -48,30 +45,32 @@ export const POST = async (req: NextRequest) => {
 
     await newProduct.save();
 
-    if (collections) {
-      for (const collectionId of collections) {
-        const collection = await Collection.findById(collectionId);
-        if (collection) {
-          collection.products.push(newProduct._id);
-          await collection.save();
-        }
-      }
+    if (collections && collections.length > 0) {
+      await Collection.updateMany(
+        { _id: { $in: collections } },
+        { $push: { products: newProduct._id } }
+      );
     }
 
-    if (category) {
-      for (const categoryId of category) {
-        const category = await Category.findById(categoryId);
-        if (category) {
-          category.products.push(newProduct._id);
-          await category.save();
-        }
-      }
+    if (category && category.length > 0) {
+      await Category.updateMany(
+        { _id: { $in: category } },
+        { $push: { products: newProduct._id } }
+      );
     }
 
     return NextResponse.json(newProduct, { status: 200 });
-  } catch (err) {
-    console.log("[products_POST]", err);
-    return new NextResponse("Internal Error", { status: 500 });
+  } catch (error) {
+    console.error("[products_POST]", error);
+
+    if (error instanceof Error) {
+      if (error.name === "ValidationError") {
+        return new NextResponse(`Validation Error: ${error.message}`, { status: 400 });
+      }
+      return new NextResponse(`Error: ${error.message}`, { status: 500 });
+    } else {
+      return new NextResponse("Internal Server Error", { status: 500 });
+    }
   }
 };
 

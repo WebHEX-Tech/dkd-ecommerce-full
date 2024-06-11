@@ -11,7 +11,9 @@ import React from "react";
 
 const Category = async ({ params }: { params: { categoryId: string } }) => {
   const categoryDetails = await getCategoryDetails(params.categoryId);
-
+  const collectionTitle = categoryDetails.collections[0].title;
+  console.log(collectionTitle);
+  
   const productsByCategory = categoryDetails.products.reduce(
     (acc: { [key: string]: ProductType[] }, product: ProductType) => {
       product.category.forEach((category) => {
@@ -34,11 +36,11 @@ const Category = async ({ params }: { params: { categoryId: string } }) => {
               <BreadcrumbLink href="/">Home</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
-            {/* <BreadcrumbItem>
+            <BreadcrumbItem>
               <BreadcrumbLink href={`/collections/`}>
-                {collectionDetails.title}
+                {collectionTitle}
               </BreadcrumbLink>
-            </BreadcrumbItem> */}
+            </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <span className="text-grey-1">{categoryDetails.title}</span>

@@ -49,7 +49,6 @@ export const POST = async (
 ) => {
   try {
     const { userId } = auth();
-
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
@@ -57,7 +56,6 @@ export const POST = async (
     await connectToDB();
 
     const product = await Product.findById(params.productId);
-
     if (!product) {
       return new NextResponse(
         JSON.stringify({ message: "Product not found" }),
@@ -77,41 +75,23 @@ export const POST = async (
       stocks,
     } = await req.json();
 
-    if (!title || !description || !media || !category || !price || !stocks) {
-      return new NextResponse("Not enough data to create a new product", {
+    if (!title || !description || !media || !category || price == null || stocks == null) {
+      return new NextResponse("Not enough data to update the product", {
         status: 400,
       });
     }
 
-    const addedCollections = collections.filter(
-      (collectionId: string) => !product.collections.includes(collectionId)
-    );
     const removedCollections = product.collections.filter(
       (collectionId: string) => !collections.includes(collectionId)
-    );
-
-    const addedCategory = category.filter(
-      (categoryId: string) => !product.category.includes(categoryId)
     );
     const removedCategory = product.category.filter(
       (categoryId: string) => !category.includes(categoryId)
     );
 
     await Promise.all([
-      ...addedCollections.map((collectionId: string) =>
-        Collection.findByIdAndUpdate(collectionId, {
-          $push: { products: product._id },
-        })
-      ),
       ...removedCollections.map((collectionId: string) =>
         Collection.findByIdAndUpdate(collectionId, {
           $pull: { products: product._id },
-        })
-      ),
-
-      ...addedCategory.map((categoryId: string) =>
-        Category.findByIdAndUpdate(categoryId, {
-          $push: { products: product._id },
         })
       ),
       ...removedCategory.map((categoryId: string) =>
@@ -121,7 +101,6 @@ export const POST = async (
       ),
     ]);
 
-    // Update product
     const updatedProduct = await Product.findByIdAndUpdate(
       product._id,
       {
@@ -141,6 +120,20 @@ export const POST = async (
       .populate({ path: "category", model: Category });
 
     await updatedProduct.save();
+
+    if (collections && collections.length > 0) {
+      await Collection.updateMany(
+        { _id: { $in: collections } },
+        { $push: { products: updatedProduct._id } }
+      );
+    }
+
+    if (category && category.length > 0) {
+      await Category.updateMany(
+        { _id: { $in: category } },
+        { $push: { products: updatedProduct._id } }
+      );
+    }
 
     return NextResponse.json(updatedProduct, { status: 200 });
   } catch (err) {
@@ -173,7 +166,6 @@ export const DELETE = async (
 
     await Product.findByIdAndDelete(product._id);
 
-    // Update collections
     await Promise.all([
       ...product.collections.map((collectionId: string) =>
         Collection.findByIdAndUpdate(collectionId, {

@@ -3,8 +3,8 @@
 import { useState } from "react";
 import HeartFavorite from "./HeartFavorite";
 import { MinusCircle, PlusCircle } from "lucide-react";
-
 import useCart from "@/lib/hooks/useCart";
+import { Badge } from "./ui/badge";
 
 const ProductInfo = ({ productInfo }: { productInfo: ProductType }) => {
   const [selectedSize, setSelectedSize] = useState<string>(
@@ -13,6 +13,21 @@ const ProductInfo = ({ productInfo }: { productInfo: ProductType }) => {
   const [quantity, setQuantity] = useState<number>(1);
 
   const cart = useCart();
+
+  const stock = productInfo.stocks;
+  const isOutOfStock = stock === 0 || stock === null || stock < 0;
+  const badgeText = isOutOfStock ? "Out of Stock" : "In Stock";
+  const badgeStyle = isOutOfStock ? "bg-red-600 text-white" : "bg-green-600 text-white";
+
+  const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let newQuantity = parseInt(event.target.value);
+    if (isNaN(newQuantity) || newQuantity < 1) {
+      newQuantity = 1;
+    } else if (newQuantity > stock) {
+      newQuantity = stock;
+    }
+    setQuantity(newQuantity);
+  };
 
   return (
     <div className="max-w-[400px] flex flex-col gap-4">
@@ -26,7 +41,7 @@ const ProductInfo = ({ productInfo }: { productInfo: ProductType }) => {
         <p className="text-base-bold">{productInfo.category[0].title}</p>
       </div>
 
-      <p className="text-heading3-bold">₱ {productInfo.price.toFixed(2)}</p>
+      <p className="text-heading3-bold">₱ {productInfo.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
 
       <div className="flex flex-col gap-2">
         <p className="text-base-medium text-grey-1">Description:</p>
@@ -41,7 +56,7 @@ const ProductInfo = ({ productInfo }: { productInfo: ProductType }) => {
               <p
                 key={index}
                 className={`border border-black px-2 py-1 rounded-lg cursor-pointer ${
-                  selectedSize === size && "bg-black text-white"
+                  selectedSize === size ? "bg-black text-white" : ""
                 }`}
                 onClick={() => setSelectedSize(size)}
               >
@@ -53,29 +68,50 @@ const ProductInfo = ({ productInfo }: { productInfo: ProductType }) => {
       )}
 
       <div className="flex flex-col gap-2">
+        <div className="flex gap-4 items-center">
+          <Badge className={badgeStyle}>{badgeText}</Badge>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
         <p className="text-base-medium text-grey-1">Quantity:</p>
         <div className="flex gap-4 items-center">
           <MinusCircle
-            className="hover:text-red-1 cursor-pointer"
-            onClick={() => quantity > 1 && setQuantity(quantity - 1)}
+            className={`hover:text-red-1 cursor-pointer ${isOutOfStock && "text-gray-400 cursor-not-allowed"}`}
+            onClick={() => !isOutOfStock && quantity > 1 && setQuantity(quantity - 1)}
           />
-          <p className="text-body-bold">{quantity}</p>
+          <input
+            type="number"
+            value={quantity}
+            onChange={handleQuantityChange}
+            className={`border px-2 py-1 rounded-lg text-center text-body-bold w-[4.5rem] ${
+              isOutOfStock ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""
+            }`}
+            min="1"
+            max={stock}
+            disabled={isOutOfStock}
+          />
           <PlusCircle
-            className="hover:text-red-1 cursor-pointer"
-            onClick={() => setQuantity(quantity + 1)}
+            className={`hover:text-red-1 cursor-pointer ${isOutOfStock && "text-gray-400 cursor-not-allowed"}`}
+            onClick={() => !isOutOfStock && quantity < stock && setQuantity(quantity + 1)}
           />
         </div>
       </div>
 
       <button
-        className="outline text-base-bold py-3 rounded-lg hover:bg-black hover:text-white"
+        className={`outline text-base-bold py-3 rounded-lg ${
+          isOutOfStock ? "bg-gray-400 text-white cursor-not-allowed" : "hover:bg-black hover:text-white"
+        }`}
         onClick={() => {
-          cart.addItem({
-            item: productInfo,
-            quantity,
-            size: selectedSize,
-          });
+          if (!isOutOfStock) {
+            cart.addItem({
+              item: productInfo,
+              quantity,
+              size: selectedSize,
+            });
+          }
         }}
+        disabled={isOutOfStock}
       >
         Add To Cart
       </button>

@@ -25,13 +25,15 @@ export const columns: ColumnDef<ProductType>[] = [
     accessorKey: "collections",
     header: "Collections",
     cell: ({ row }) => {
-      console.log(row.original.collections);
       return row.original.collections.map((collection) => collection.title).join(", ");
     },
   },
   {
     accessorKey: "price",
     header: "Price (₱)",
+    cell: ({ row }) => {
+      return row.original.price.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    },
   },
   {
     accessorKey: "stocks",

@@ -33,7 +33,7 @@ const formSchema = z.object({
   tags: z.array(z.string()),
   sizes: z.array(z.string()),
   price: z.coerce.number().min(0.1),
-  stocks: z.coerce.number(),
+  stocks: z.coerce.number().min(0),
 });
 
 interface ProductFormProps {

@@ -1,7 +1,7 @@
 const Loader = () => {
   return (
     <div className="flex items-center justify-center h-screen">
-      <div className="animate-spin rounded-full border-t-4 border-blue-500 border-solid h-12 w-12"></div>
+      <div className="rounded-full h-20 w-20 bg-blue-2 animate-ping"></div>
     </div>
   );
 }

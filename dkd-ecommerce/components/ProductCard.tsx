@@ -37,7 +37,7 @@ const ProductCard = ({ product, updateSignedInUser }: ProductCardProps) => {
           </div>
           <div className="flex justify-between items-center mt-2">
             <p className="text-body-bold transform transition duration-300 group-hover:text-white">
-              ₱{product.price.toFixed(2)}
+              ₱{product.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
             </p>
           </div>
         </div>

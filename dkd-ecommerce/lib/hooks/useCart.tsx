@@ -15,6 +15,7 @@ interface CartStore {
   removeItem: (idToRemove: string) => void;
   increaseQuantity: (idToIncrease: string) => void;
   decreaseQuantity: (idToDecrease: string) => void;
+  updateQuantity: (itemId: string, newQuantity: number) => void;
   clearCart: () => void;
 }
 
@@ -23,6 +24,7 @@ const useCart = create(
     (set, get) => ({
       cartItems: [],
       addItem: (data: CartItem) => {
+        toast.dismiss();
         const { item, quantity, color, size } = data;
         const currentItems = get().cartItems; // all the items already in cart
         const isExisting = currentItems.find(
@@ -37,6 +39,7 @@ const useCart = create(
         toast.success("Item added to cart", { icon: "🛒" });
       },
       removeItem: (idToRemove: String) => {
+        toast.dismiss();
         const newCartItems = get().cartItems.filter(
           (cartItem) => cartItem.item._id !== idToRemove
         );
@@ -44,6 +47,7 @@ const useCart = create(
         toast.success("Item removed from cart");
       },
       increaseQuantity: (idToIncrease: String) => {
+        toast.dismiss();
         const newCartItems = get().cartItems.map((cartItem) =>
           cartItem.item._id === idToIncrease
             ? { ...cartItem, quantity: cartItem.quantity + 1 }
@@ -53,6 +57,7 @@ const useCart = create(
         toast.success("Item quantity increased");
       },
       decreaseQuantity: (idToDecrease: String) => {
+        toast.dismiss();
         const newCartItems = get().cartItems.map((cartItem) =>
           cartItem.item._id === idToDecrease
             ? { ...cartItem, quantity: cartItem.quantity - 1 }
@@ -62,6 +67,15 @@ const useCart = create(
         toast.success("Item quantity decreased");
       },
       clearCart: () => set({ cartItems: [] }),
+      updateQuantity: (itemId, newQuantity) => {
+        set((state) => ({
+          cartItems: state.cartItems.map((cartItem) =>
+            cartItem.item._id === itemId
+              ? { ...cartItem, quantity: newQuantity }
+              : cartItem
+          ),
+        }));
+      },
     }),
     {
       name: "cart-storage",
