@@ -8,6 +8,7 @@ type CollectionType = {
 type CategoryType = {
   _id: string;
   title: string;
+  collections: CollectionType[];
 };
 
 type ProductType = {

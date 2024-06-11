@@ -73,20 +73,37 @@ const Navbar: React.FC<NavbarClientProps> = ({ collections, category }) => {
                 <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-max gap-2 p-2 md:grid-cols-2">
-                    {category.map((categories) => (
-                      <NavigationMenuLink
-                        asChild
-                        key={categories._id}
-                        className={`text-nowrap text-left p-4 border-l-2 border-red-6 hover:bg-red-7 hover:text-red-6 hover:underline ${
-                          pathname === `/category/${categories._id}` &&
-                          "text-red-6 underline"
-                        }`}
-                      >
-                        <Link href={`/category/${categories._id}`}>
-                          {categories.title}
-                        </Link>
-                      </NavigationMenuLink>
-                    ))}
+                    {category
+                      .slice()
+                      .sort((a, b) => {
+                        const titleA = a.collections[0]?.title || "";
+                        const titleB = b.collections[0]?.title || "";
+                        return titleA.localeCompare(titleB);
+                      })
+                      .map((categories) => (
+                        <NavigationMenuLink
+                          asChild
+                          key={categories._id}
+                          className={`text-nowrap text-left p-4 border-l-2 border-red-6 hover:bg-red-7 hover:text-red-6 hover:underline ${
+                            pathname === `/category/${categories._id}` &&
+                            "text-red-6 underline"
+                          }`}
+                        >
+                          <div>
+                            <Link href={`/category/${categories._id}`}>
+                              {categories.title}
+                            </Link>
+                            {categories.collections.map((collection) => (
+                              <p
+                                key={collection._id}
+                                className="text-grey-1 text-[12px] cursor-pointer"
+                              >
+                                {collection.title}
+                              </p>
+                            ))}
+                          </div>
+                        </NavigationMenuLink>
+                      ))}
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -102,9 +119,9 @@ const Navbar: React.FC<NavbarClientProps> = ({ collections, category }) => {
           </Link>
         </div>
 
-        <div className="flex gap-3 border border-grey-2 px-3 py-1 items-center rounded-lg shadow-md">
+        <div className="flex gap-3 border border-grey-2 px-3 py-1 items-center rounded-lg">
           <input
-            className="outline-none max-sm:max-w-[120px]"
+            className="outline-none max-sm:max-w-[120px] border-r border-grey-1"
             placeholder="Search..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -122,7 +139,7 @@ const Navbar: React.FC<NavbarClientProps> = ({ collections, category }) => {
             href="/cart"
             className={`flex items-center gap-3 border border-red-7 rounded-lg px-2 py-1 bg-red-5 text-red-6 transform transition duration-300 ease-in-out hover:border-red-3 hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.2)] hover:bg-red-3 hover:text-white max-md:hidden ${
               pathname === "/cart" &&
-              "shadow-[inset_2px_2px_5px_rgba(0,0,0,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.2)] border-red-1 bg-red-4 text-white"
+              "shadow-[inset_2px_2px_5px_rgba(0,0,0,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.2)] border-red-1 bg-red-3 text-white"
             }`}
           >
             <ShoppingCart />
@@ -160,7 +177,10 @@ const Navbar: React.FC<NavbarClientProps> = ({ collections, category }) => {
                               "text-red-6 underline"
                             }`}
                           >
-                            <Link className="text-[10px]" href={`/collections/${collection._id}`}>
+                            <Link
+                              className="text-[12px]"
+                              href={`/collections/${collection._id}`}
+                            >
                               {collection.title}
                             </Link>
                           </NavigationMenuLink>
@@ -177,20 +197,40 @@ const Navbar: React.FC<NavbarClientProps> = ({ collections, category }) => {
                     <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
                     <NavigationMenuContent>
                       <ul className="grid z-50 w-max gap-2 p-2 md:grid-cols-1">
-                        {category.map((categories) => (
-                          <NavigationMenuLink
-                            asChild
-                            key={categories._id}
-                            className={`text-nowrap text-left border-l-2 border-red-6 p-2 hover:bg-red-7 hover:text-red-6 hover:underline ${
-                              pathname === `/category/${categories._id}` &&
-                              "text-red-6 underline"
-                            }`}
-                          >
-                            <Link className="text-[10px]" href={`/category/${categories._id}`}>
-                              {categories.title}
-                            </Link>
-                          </NavigationMenuLink>
-                        ))}
+                        {category
+                          .slice()
+                          .sort((a, b) => {
+                            const titleA = a.collections[0]?.title || "";
+                            const titleB = b.collections[0]?.title || "";
+                            return titleA.localeCompare(titleB);
+                          })
+                          .map((categories) => (
+                            <NavigationMenuLink
+                              asChild
+                              key={categories._id}
+                              className={`text-nowrap text-left p-4 border-l-2 border-red-6 hover:bg-red-7 hover:text-red-6 hover:underline ${
+                                pathname === `/category/${categories._id}` &&
+                                "text-red-6 underline"
+                              }`}
+                            >
+                              <div>
+                                <Link
+                                  className="text-[12px]"
+                                  href={`/category/${categories._id}`}
+                                >
+                                  {categories.title}
+                                </Link>
+                                {categories.collections.map((collection) => (
+                                  <p
+                                    key={collection._id}
+                                    className="text-grey-1 text-[10px] cursor-pointer"
+                                  >
+                                    {collection.title}
+                                  </p>
+                                ))}
+                              </div>
+                            </NavigationMenuLink>
+                          ))}
                       </ul>
                     </NavigationMenuContent>
                   </NavigationMenuItem>
@@ -215,7 +255,7 @@ const Navbar: React.FC<NavbarClientProps> = ({ collections, category }) => {
                 href="/cart"
                 className={`flex items-center w-max gap-3 border border-red-7 rounded-lg px-2 py-1 bg-red-5 text-red-6 transform transition duration-300 ease-in-out hover:border-red-3 hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.2)] hover:bg-red-3 hover:text-white ${
                   pathname === "/cart" &&
-                  "shadow-[inset_2px_2px_5px_rgba(0,0,0,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.2)] border-red-1 bg-red-4 text-white"
+                  "shadow-[inset_2px_2px_5px_rgba(0,0,0,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.2)] border-red-1 bg-red-3 text-white"
                 }`}
               >
                 <ShoppingCart />

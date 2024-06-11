@@ -18,8 +18,8 @@ const Collections = async () => {
                 key={collection._id}
                 src={collection.image}
                 alt={collection.title}
-                width={260}
-                height={120}
+                width={240}
+                height={100}
                 className="rounded-lg cursor-pointer transform transition duration-300 hover:scale-110"
               />
             </Link>

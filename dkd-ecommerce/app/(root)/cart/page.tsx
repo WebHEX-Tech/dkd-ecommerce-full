@@ -129,7 +129,7 @@ const Cart = () => {
           <span>₱ {totalRounded.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
         </div>
         <button
-          className="rounded-lg text-body-bold bg-white py-3 w-full transform transition duration-300 hover:bg-[green] hover:text-white"
+          className="rounded-lg text-body-bold bg-white py-3 w-full transform transition duration-300 cursor-pointer hover:bg-[green] hover:text-white"
           onClick={handleCheckout}
           disabled={cart.cartItems.length === 0 || cart.cartItems.some(cartItem => cartItem.item.stocks <= 0)}
         >

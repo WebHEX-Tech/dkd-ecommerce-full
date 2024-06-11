@@ -37,7 +37,7 @@ const CollectionDetails = async ({
   );
 
   return (
-    <div className="px-10 py-5 flex flex-col items-center gap-8">
+    <div className="px-6 md:px-10 py-5 flex flex-col items-center gap-8">
       <div className="w-full">
         <Breadcrumb className="mb-4">
           <BreadcrumbList>
@@ -56,13 +56,13 @@ const CollectionDetails = async ({
         </Breadcrumb>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-3 items-center border-grey-1 border-b pb-6">
+      <div className="w-full flex flex-col md:flex-row gap-3 items-center justify-center border-grey-1 border-b pb-6">
         <Image
           src={collectionDetails.image}
           width={350}
           height={400}
           alt="collection"
-          className="w-max h-[280px] object-cover rounded-xl"
+          className="w-max h-[190px] md:h-[250px] object-cover rounded-xl"
         />
         <p className="text-xl text-black text-justify md:text-left max-w-[900px]">
           {collectionDetails.description}
@@ -74,14 +74,14 @@ const CollectionDetails = async ({
       </p>
 
       {Object.keys(productsByCategory).map((categoryId) => (
-        <div key={categoryId} className="w-full">
+        <div key={categoryId} className="w-full px-0 xl:px-[6rem]">
           <Link
             href={`/category/${productsByCategory[categoryId]._id}`}
             className="font-bold text-xl text-left underline hover:text-red-1"
           >
             {productsByCategory[categoryId].title}
           </Link>
-          <div className="flex flex-wrap justify-center align-middle md:justify-normal md:align-normal gap-10 m-4">
+          <div className="flex flex-wrap align-middle md:justify-normal md:align-normal gap-2 md:gap-10 mx-0 md:mx-4 my-4">
             {productsByCategory[categoryId].products.map(
               (product: ProductType) => (
                 <ProductCard key={product._id} product={product} />

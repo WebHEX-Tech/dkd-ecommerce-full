@@ -13,10 +13,12 @@ export const GET = async (
   try {
     await connectToDB();
 
-    const category = await Category.findById(params.categoryId).populate({
+    const category = await Category.findById(params.categoryId)
+      .populate({
         path: "products",
         model: Product,
-      });
+      })
+      .populate({ path: "collections", model: Collection });
 
     if (!category) {
       return new NextResponse(
@@ -51,7 +53,7 @@ export const POST = async (
       return new NextResponse("category not found", { status: 404 });
     }
 
-    const { title, collections, } = await req.json();
+    const { title, collections } = await req.json();
 
     if (!title) {
       return new NextResponse("Title are required", { status: 400 });
@@ -59,7 +61,7 @@ export const POST = async (
 
     category = await Category.findByIdAndUpdate(
       params.categoryId,
-      { title, collections, },
+      { title, collections },
       { new: true }
     );
 
@@ -91,7 +93,7 @@ export const DELETE = async (
       { category: params.categoryId },
       { $pull: { category: params.categoryId } }
     );
-    
+
     return new NextResponse("category is deleted", { status: 200 });
   } catch (err) {
     console.log("[categoryId_DELETE]", err);
