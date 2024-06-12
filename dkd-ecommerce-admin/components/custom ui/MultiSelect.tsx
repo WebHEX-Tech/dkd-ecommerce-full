@@ -36,10 +36,10 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   const selectables = options.filter((option) => !selected.includes(option));
 
   return (
-    <Command className="overflow-visible bg-white">
+    <Command className="overflow-visible bg-white border border-gray-300">
       <div className="flex gap-1 flex-wrap border rounded-md">
         {selected.map((option) => (
-          <Badge key={option._id}>
+          <Badge key={option._id} className="bg-blue-2 m-2">
             {option.title}
             <button
               type="button"

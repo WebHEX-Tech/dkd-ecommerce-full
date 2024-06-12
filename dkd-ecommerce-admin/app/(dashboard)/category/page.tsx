@@ -35,9 +35,9 @@ const Category = () => {
 
   return loading ? <Loader /> : (
     <div className="px-10 py-5">
-      <div className="flex items-center justify-between">
-        <p className="text-heading2-bold">Categories</p>
-        <Button className="bg-blue-1 text-white" onClick={() => router.push("/category/new")}>
+      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+        <p className="text-heading2-bold text-black">Categories</p>
+        <Button className="bg-blue-1 text-white " onClick={() => router.push("/category/new")}>
           <Plus className="h-4 w-4 mr-2" />
           Create Category
         </Button>

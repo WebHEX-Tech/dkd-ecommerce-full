@@ -7,13 +7,14 @@ import {
   NavigationMenuContent,
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
+import { getSearchedProducts } from "@/lib/actions/actions";
 import useCart from "@/lib/hooks/useCart";
 import { UserButton, useUser } from "@clerk/nextjs";
-import { CircleUserRound, Menu, Search, ShoppingCart } from "lucide-react";
+import { Menu, Search, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface NavbarClientProps {
   collections: CollectionType[];
@@ -28,10 +29,46 @@ const Navbar: React.FC<NavbarClientProps> = ({ collections, category }) => {
 
   const [dropdownMenu, setDropdownMenu] = useState(false);
   const [query, setQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(
+    null
+  );
+
+  useEffect(() => {
+    return () => {
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+      }
+    };
+  }, []);
+
+  const handleSearch = (value: string) => {
+    setQuery(value);
+
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+
+    const timeout = setTimeout(() => {
+      fetchSearchResults(value);
+    }, 300);
+
+    setTypingTimeout(timeout);
+  };
+
+  const fetchSearchResults = async (searchQuery: string) => {
+    try {
+      const results = await getSearchedProducts(searchQuery);
+      setSearchResults(results);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+      setSearchResults([]);
+    }
+  };
 
   return (
     <>
-      <div className="sticky top-0 z-10 py-2 px-10 flex gap-2 justify-between items-center bg-white shadow-xl max-sm:px-2">
+      <div className="sticky top-0 z-50 py-2 px-10 flex gap-2 justify-between items-center bg-white shadow-xl max-sm:px-2">
         <Link href="/">
           <Image src="/logo.png" alt="logo" width={130} height={100} />
         </Link>
@@ -119,12 +156,12 @@ const Navbar: React.FC<NavbarClientProps> = ({ collections, category }) => {
           </Link>
         </div>
 
-        <div className="flex gap-3 border border-grey-2 px-3 py-1 items-center rounded-lg">
+        <div className="relative flex gap-3 border border-gray-400 px-3 py-1 items-center rounded-lg">
           <input
-            className="outline-none max-sm:max-w-[120px] border-r border-grey-1"
+            className="outline-none max-sm:max-w-[120px] border-r border-gray-300"
             placeholder="Search..."
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => handleSearch(e.target.value)}
           />
           <button
             disabled={query === ""}
@@ -132,6 +169,39 @@ const Navbar: React.FC<NavbarClientProps> = ({ collections, category }) => {
           >
             <Search className="cursor-pointer h-4 w-4 hover:text-red-1" />
           </button>
+          {query && (
+            <div className="absolute top-10 left-0 mt-2 bg-white border border-gray-300 rounded-lg w-full max-w-[300px] shadow-xl z-10 overflow-hidden">
+              <ul>
+                {searchResults.slice(0, 6).map((product: ProductType) => (
+                  <li
+                    key={product._id}
+                    className="flex items-center justify-start gap-2 px-4 py-2 hover:bg-red-5 hover:underline hover:text-red-6 cursor-pointer"
+                    onClick={() => {
+                      router.push(`/products/${product._id}`);
+                      setQuery("");
+                    }}
+                  >
+                    <Image
+                      src={product.media[0]}
+                      alt="product"
+                      width={50}
+                      height={50}
+                      className="h-[50px] bg-white object-cover rounded-md"
+                    />
+                    <p className="two-line-truncate">{product.title}</p>
+                  </li>
+                ))}
+                {searchResults.length > 6 && (
+                  <li
+                    className="flex items-center justify-start gap-2 px-4 py-1 underline bg-red-2 hover:bg-red-5 hover:text-red-6 cursor-pointer"
+                    onClick={() => router.push(`/search/${query}`)}
+                  >
+                    <p>See All {searchResults.length} Products</p>
+                  </li>
+                )}
+              </ul>
+            </div>
+          )}
         </div>
 
         <div className="relative flex gap-3 items-center">
@@ -139,7 +209,7 @@ const Navbar: React.FC<NavbarClientProps> = ({ collections, category }) => {
             href="/cart"
             className={`flex items-center gap-3 border border-red-7 rounded-lg px-2 py-1 bg-red-5 text-red-6 transform transition duration-300 ease-in-out hover:border-red-3 hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.2)] hover:bg-red-3 hover:text-white max-md:hidden ${
               pathname === "/cart" &&
-              "shadow-[inset_2px_2px_5px_rgba(0,0,0,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.2)] border-red-1 bg-red-3 text-white"
+              "border-red-6 bg-gradient-to-t from-red-1 to-red-4 text-white"
             }`}
           >
             <ShoppingCart />

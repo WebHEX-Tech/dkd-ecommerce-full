@@ -38,8 +38,8 @@ const Products = () => {
     <Loader />
   ) : (
     <div className="px-10 py-5">
-      <div className="flex items-center justify-between">
-        <p className="text-heading2-bold">Products</p>
+      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+        <p className="text-heading2-bold text-black">Products</p>
         <Button
           className="bg-blue-1 text-white"
           onClick={() => router.push("/products/new")}

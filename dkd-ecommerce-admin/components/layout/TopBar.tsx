@@ -14,10 +14,10 @@ const TopBar = () => {
   const pathname = usePathname();
 
   return (
-    <div className="sticky top-0 z-20 w-full flex justify-between items-center px-8 py-4 bg-blue-2 shadow-xl lg:hidden">
-      <Image src="/logo.png" alt="logo" width={150} height={70} />
+    <div className="sticky top-0 z-20 w-full flex justify-between items-center px-8 py-4 bg-white shadow-2xl lg:hidden">
+      <Image src="/logo.png" alt="logo" width={100} height={30} />
 
-      <div className="flex gap-8 max-md:hidden">
+      <div className="flex gap-8 max-lg:hidden">
         {navLinks.map((link) => (
           <Link
             href={link.url}
@@ -31,16 +31,18 @@ const TopBar = () => {
 
       <div className="relative flex gap-4 items-center">
         <Menu
-          className="cursor-pointer md:hidden"
+          className="cursor-pointer lg:hidden text-blue-1"
           onClick={() => setDropdownMenu(!dropdownMenu)}
         />
         {dropdownMenu && (
-          <div className="absolute top-10 right-6 flex flex-col gap-8 p-5 bg-white shadow-xl rounded-lg">
+          <div className="absolute top-10 right-6 flex flex-col gap-8 p-5 bg-grey-2 shadow-xl rounded-lg">
             {navLinks.map((link) => (
               <Link
                 href={link.url}
                 key={link.label}
-                className="flex gap-4 text-body-medium"
+                className={`flex gap-4 text-body-medium ${
+                  pathname === link.url ? "text-blue-1 underline" : "text-gray-500"
+                }`}
               >
                 {link.icon} <p>{link.label}</p>
               </Link>

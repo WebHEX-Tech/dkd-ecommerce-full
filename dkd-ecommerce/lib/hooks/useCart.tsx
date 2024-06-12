@@ -36,7 +36,7 @@ const useCart = create(
         }
 
         set({ cartItems: [...currentItems, { item, quantity, color, size }] });
-        toast.success("Item added to cart", { icon: "🛒" });
+        toast.success("Item added to cart🛒");
       },
       removeItem: (idToRemove: String) => {
         toast.dismiss();

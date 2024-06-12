@@ -17,8 +17,9 @@ const ProductCard = ({ product, updateSignedInUser }: ProductCardProps) => {
     <div className="group">
       <Link
         href={`/products/${product._id}`}
-        className="w-[150px] h-[320px] md:w-[220px] md:h-[360px] flex flex-col gap-2 bg-white rounded-md border border-grey-3 overflow-hidden shadow-md transform transition duration-300 group-hover:shadow-2xl"
+        className="relative w-[150px] h-[320px] md:w-[220px] md:h-[360px] flex flex-col gap-2 bg-white rounded-md border border-grey-3 overflow-hidden shadow-md transform transition duration-300 group-hover:shadow-2xl"
       >
+        <div className="absolute top-0 right-[0%] -translate-y-[100%] rounded-full w-[100vw] h-[1.2rem] blur-2xl transform transition duration-300 group-hover:bg-red-4 z-10"></div>
         <Image
           src={product.media[0]}
           alt="product"

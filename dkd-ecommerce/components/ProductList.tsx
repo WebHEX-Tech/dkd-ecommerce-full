@@ -6,11 +6,11 @@ const ProductList = async () => {
 
   return (
     <div className="flex flex-col items-center gap-10 py-8 px-5">
-      <p className="text-heading2-bold">Products</p>
+      <p className="text-heading2-bold" id="products">Top Products</p>
       {!products || products.length === 0 ? (
         <p className="text-body-bold">No products found</p>
       ) : (
-        <div className="flex flex-wrap justify-center gap-16">
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4">
           {products.map((product: ProductType) => (
             <ProductCard key={product._id} product={product}/>
           ))}
