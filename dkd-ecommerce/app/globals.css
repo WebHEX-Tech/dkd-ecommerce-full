@@ -19,6 +19,10 @@
   line-height: 1rem;
 }
 
+.highlight{
+  color:rgb(42, 108, 207);
+}
+
 @media (min-width: 768px) {
   .two-line-truncate {
     display: -webkit-box;

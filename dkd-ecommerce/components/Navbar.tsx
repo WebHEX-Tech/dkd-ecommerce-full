@@ -14,7 +14,7 @@ import { Menu, Search, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface NavbarClientProps {
   collections: CollectionType[];
@@ -34,11 +34,30 @@ const Navbar: React.FC<NavbarClientProps> = ({ collections, category }) => {
     null
   );
 
+  const searchResultsRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     return () => {
       if (typingTimeout) {
         clearTimeout(typingTimeout);
       }
+    };
+  }, [typingTimeout]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchResultsRef.current &&
+        !searchResultsRef.current.contains(event.target as Node)
+      ) {
+        setSearchResults([]);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -64,6 +83,27 @@ const Navbar: React.FC<NavbarClientProps> = ({ collections, category }) => {
       console.error("Error fetching search results:", error);
       setSearchResults([]);
     }
+  };
+
+  const highlightText = (text: string, query: string) => {
+    if (!query) {
+      return text;
+    }
+
+    const parts = text.split(new RegExp(`(${query})`, "gi"));
+    return (
+      <>
+        {parts.map((part, index) =>
+          part.toLowerCase() === query.toLowerCase() ? (
+            <span key={index} className="highlight">
+              {part}
+            </span>
+          ) : (
+            part
+          )
+        )}
+      </>
+    );
   };
 
   return (
@@ -170,7 +210,10 @@ const Navbar: React.FC<NavbarClientProps> = ({ collections, category }) => {
             <Search className="cursor-pointer h-4 w-4 hover:text-red-1" />
           </button>
           {query && (
-            <div className="absolute top-10 left-0 mt-2 bg-white border border-gray-300 rounded-lg w-full max-w-[300px] shadow-xl z-10 overflow-hidden">
+            <div
+              ref={searchResultsRef}
+              className="absolute top-10 left-0 mt-2 bg-white border border-gray-300 rounded-lg w-full max-w-[300px] shadow-xl z-10 overflow-hidden"
+            >
               <ul>
                 {searchResults.slice(0, 6).map((product: ProductType) => (
                   <li
@@ -188,7 +231,7 @@ const Navbar: React.FC<NavbarClientProps> = ({ collections, category }) => {
                       height={50}
                       className="h-[50px] bg-white object-cover rounded-md"
                     />
-                    <p className="two-line-truncate">{product.title}</p>
+                    <p className="two-line-truncate">{highlightText(product.title, query)}</p>
                   </li>
                 ))}
                 {searchResults.length > 6 && (
@@ -307,12 +350,7 @@ const Navbar: React.FC<NavbarClientProps> = ({ collections, category }) => {
                 </NavigationMenuList>
               </NavigationMenu>
 
-              {/* <Link
-                href={user ? "/wishlist" : "/sign-in"}
-                className="hover:text-red-1"
-              >
-                Wishlist
-              </Link> */}
+              {/* <Link href={user ? "/wishlist" : "/sign-in"} className="hover:text-red-1"> Wishlist </Link> */}
               <Link
                 href={user ? "/orders" : "/sign-in"}
                 className={`hover:text-red-1 hover:underline ${

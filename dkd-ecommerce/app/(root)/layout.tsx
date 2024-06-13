@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import BackToTopButton from "@/components/BackToTopButton";
 import ToasterProvider from "@/lib/providers/ToasterProvider";
 import { getCategory, getCollections } from "@/lib/actions/actions";
+import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,6 +31,7 @@ export default async function RootLayout({
           <ToasterProvider />
           <Navbar collections={collections} category={category}/>
           {children}
+          <Footer />
           <BackToTopButton />
         </ClerkProvider>
       </body>
