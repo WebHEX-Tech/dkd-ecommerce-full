@@ -36,6 +36,8 @@ const CollectionDetails = async ({
     {}
   );
 
+  const hasProducts = Object.keys(productsByCategory).length > 0;
+
   return (
     <div className="px-6 md:px-10 py-5 flex flex-col items-center gap-8">
       <div className="w-full">
@@ -62,7 +64,7 @@ const CollectionDetails = async ({
           width={350}
           height={400}
           alt="collection"
-          className="w-max h-[190px] md:h-[250px] object-cover rounded-xl"
+          className="w-max h-[190px] md:h-[250px] object-cover rounded-lg"
         />
         <p className="text-xl text-black text-justify md:text-left max-w-[900px]">
           {collectionDetails.description}
@@ -70,26 +72,30 @@ const CollectionDetails = async ({
       </div>
 
       <p className="text-heading2-bold text-center text-blue-3">
-        {collectionDetails.title}
+        {collectionDetails.title} Products
       </p>
 
-      {Object.keys(productsByCategory).map((categoryId) => (
-        <div key={categoryId} className="w-full px-0 xl:px-[6rem]">
-          <Link
-            href={`/category/${productsByCategory[categoryId]._id}`}
-            className="font-bold text-xl text-left underline hover:text-red-1"
-          >
-            {productsByCategory[categoryId].title}
-          </Link>
-          <div className="flex flex-wrap align-middle md:justify-normal md:align-normal gap-2 md:gap-10 mx-0 md:mx-4 my-4">
-            {productsByCategory[categoryId].products.map(
-              (product: ProductType) => (
-                <ProductCard key={product._id} product={product} />
-              )
-            )}
+      {hasProducts ? (
+        Object.keys(productsByCategory).map((categoryId) => (
+          <div key={categoryId} className="w-full px-0 xl:px-[6rem]">
+            <Link
+              href={`/category/${productsByCategory[categoryId]._id}`}
+              className="font-bold text-xl text-left underline hover:text-red-1"
+            >
+              {productsByCategory[categoryId].title}
+            </Link>
+            <div className="flex flex-wrap align-middle md:justify-normal md:align-normal gap-2 md:gap-10 mx-0 md:mx-4 my-4">
+              {productsByCategory[categoryId].products.map(
+                (product: ProductType) => (
+                  <ProductCard key={product._id} product={product} />
+                )
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        ))
+      ) : (
+        <p className='text-body-bold my-10'>No products available</p>
+      )}
     </div>
   );
 };
