@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import HeartFavorite from "./HeartFavorite";
 import { MinusCircle, PlusCircle } from "lucide-react";
 import useCart from "@/lib/hooks/useCart";
 import { Badge } from "./ui/badge";
@@ -33,7 +32,6 @@ const ProductInfo = ({ productInfo }: { productInfo: ProductType }) => {
     <div className="max-w-[400px] flex flex-col gap-4">
       <div className="flex justify-between items-center">
         <p className="text-heading3-bold">{productInfo.title}</p>
-        <HeartFavorite product={productInfo} />
       </div>
 
       <div className="flex gap-2">
@@ -99,8 +97,8 @@ const ProductInfo = ({ productInfo }: { productInfo: ProductType }) => {
       </div>
 
       <button
-        className={`outline text-base-bold py-3 rounded-lg ${
-          isOutOfStock ? "bg-gray-400 text-white cursor-not-allowed" : "hover:bg-black hover:text-white"
+        className={`border border-green-600 text-base-bold text-green-600 py-3 rounded-lg ${
+          isOutOfStock ? "bg-gray-400 text-white cursor-not-allowed" : "hover:bg-green-600 hover:text-white"
         }`}
         onClick={() => {
           if (!isOutOfStock) {

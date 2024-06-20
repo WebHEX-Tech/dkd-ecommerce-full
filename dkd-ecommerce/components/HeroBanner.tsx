@@ -32,7 +32,7 @@ const HeroBanner = () => {
           <div className="flex justify-center">
             <Link
               href="/all-products"
-              className="bg-gradient-to-t from-red-1 to-red-4 text-white px-4 py-2 border border-red-6 rounded-lg transform transition duration-300 ease-in-out hover:scale-110 hover:shadow-2xl flex items-center gap-2 text-nowrap"
+              className="bg-gradient-to-t from-red-1 to-red-4 text-white px-4 py-2 border border-red-6 rounded-lg transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl flex items-center gap-2 text-nowrap"
             >
               Shop Now <ChevronRight className="w-4 h-4" />
             </Link>

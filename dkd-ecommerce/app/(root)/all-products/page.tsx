@@ -19,6 +19,7 @@ import {
   SelectLabel,
   SelectItem,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 
 const PRODUCTS_PER_PAGE = 30;
 
@@ -93,11 +94,17 @@ const AllProducts = () => {
 
   const renderPaginationItems = () => {
     let items = [];
+
+    const shouldRenderEllipsis = totalPages > 4;
+
     for (let i = 1; i <= totalPages; i++) {
       if (i === currentPage || i === currentPage + 1 || i === currentPage - 1) {
         items.push(
           <PaginationItem key={i}>
             <PaginationLink
+              className={`cursor-pointer hover:bg-red-5 ${
+                i === currentPage && "cursor-text bg-red-5 border-red-2"
+              }`}
               isActive={i === currentPage}
               onClick={() => setCurrentPage(i)}
             >
@@ -105,7 +112,10 @@ const AllProducts = () => {
             </PaginationLink>
           </PaginationItem>
         );
-      } else if (i === currentPage + 2 || i === currentPage - 2) {
+      } else if (
+        (i === currentPage + 2 || i === currentPage - 2) &&
+        shouldRenderEllipsis
+      ) {
         items.push(
           <PaginationItem key={`ellipsis-${i}`}>
             <PaginationEllipsis />
@@ -113,12 +123,13 @@ const AllProducts = () => {
         );
       }
     }
+
     return items;
   };
 
   return (
     <div className="flex items-center justify-center">
-      <div className="px-6 md:px-10 py-10 flex flex-col items-center gap-8 w-full lg:w-4/5">
+      <div className="px-6 md:px-10 py-10 flex flex-col items-center gap-8 w-full lg:w-11/12">
         <div className="flex flex-col sm:flex-row gap-4 justify-between w-full">
           <h1 className="text-heading2-bold">All Products</h1>
           <div className="w-[200px] flex justify-between items-center mb-6">
@@ -142,6 +153,8 @@ const AllProducts = () => {
           </div>
         </div>
 
+        <Separator className="bg-gray-300" />
+
         {loading ? (
           <p className="text-body-bold">Loading products...</p>
         ) : error ? (
@@ -156,17 +169,21 @@ const AllProducts = () => {
           </div>
         )}
 
-        <div className="flex justify-center mt-6">
+        <Separator className="bg-gray-300" />
+
+        <div className="flex justify-end w-full">
           <Pagination>
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
+                  className="cursor-pointer hover:bg-red-5"
                   onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                 />
               </PaginationItem>
               {renderPaginationItems()}
               <PaginationItem>
                 <PaginationNext
+                  className="cursor-pointer hover:bg-red-5"
                   onClick={() =>
                     setCurrentPage(Math.min(totalPages, currentPage + 1))
                   }

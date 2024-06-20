@@ -25,8 +25,9 @@ const AboutUs = () => {
           culinary creations.
         </p>
         <Link
-          href="/about-us"
-          className="bg-gradient-to-t w-fit from-red-1 to-red-4 text-white text-[14px] px-4 py-2 border border-red-6 rounded-lg transform transition duration-300 ease-in-out hover:scale-110 hover:shadow-2xl text-nowrap mt-6"
+          href="/about"
+          className="bg-gradient-to-t w-fit from-red-1 to-red-4 text-white text-[14px] px-4 py-2 border border-red-6 rounded-lg transform transition duration-300 ease-in-out hover:scale-105
+           hover:shadow-2xl text-nowrap mt-6"
         >
           More About
         </Link>

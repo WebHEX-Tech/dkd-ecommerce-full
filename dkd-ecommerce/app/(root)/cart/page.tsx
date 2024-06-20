@@ -32,7 +32,7 @@ const Cart = () => {
   };
 
   return (
-    <div className="flex gap-20 py-16 px-10 max-lg:flex-col max-sm:px-3">
+    <div className="flex gap-20 py-16 px-10 max-lg:flex-col max-sm:px-3 h-screen">
       <div className="w-2/3 max-lg:w-full">
         <p className="text-heading3-bold">Shopping Cart</p>
         <hr className="my-6" />
@@ -134,7 +134,7 @@ const Cart = () => {
         )}
       </div>
 
-      <div className="w-1/3 max-lg:w-full flex flex-col gap-8 border border-red-7 bg-red-5 rounded-lg px-4 py-5">
+      <div className="w-1/3 max-lg:w-full h-fit flex flex-col gap-8 border border-red-7 bg-red-5 rounded-lg px-4 py-5">
         <p className="text-heading4-bold pb-4">
           Summary{" "}
           <span>{`(${cart.cartItems.length} ${

@@ -10,7 +10,7 @@ const Orders = async () => {
   console.log(orders[0]);
 
   return (
-    <div className="px-10 py-5 max-sm:px-3">
+    <div className="px-10 py-5 max-sm:px-3 h-screen">
       <p className="text-heading3-bold my-10">Your Orders</p>
       {!orders ||
         (orders.length === 0 && (

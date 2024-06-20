@@ -58,13 +58,13 @@ const CollectionDetails = async ({
         </Breadcrumb>
       </div>
 
-      <div className="w-full flex flex-col md:flex-row gap-3 items-center justify-center border-grey-1 border-b pb-6">
+      <div className="w-full flex flex-col md:flex-row gap-5 items-center justify-center border-grey-1 border-b pb-6">
         <Image
           src={collectionDetails.image}
           width={350}
           height={400}
           alt="collection"
-          className="w-max h-[190px] md:h-[250px] object-cover rounded-lg"
+          className="h-max w-[190px] md:w-[250px] object-cover rounded-lg"
         />
         <p className="text-xl text-black text-justify md:text-left max-w-[900px]">
           {collectionDetails.description}

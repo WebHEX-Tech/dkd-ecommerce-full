@@ -1,10 +1,17 @@
-import { Clock, Facebook, Linkedin, Mail, MapPinned, Phone } from "lucide-react";
+import {
+  Clock,
+  Facebook,
+  Linkedin,
+  Mail,
+  MapPinned,
+  Phone,
+} from "lucide-react";
 import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className="bg-red-100 text-red-6 shadow-2xl mt-[10.5rem]">
-      <div className="flex flex-col lg:flex-row justify-between gap-14 my-10 py-10 px-4 md:px-14">
+    <footer className="bg-red-100 text-red-6 shadow-2xl">
+      <div className="flex flex-col lg:flex-row justify-between gap-14 py-10 px-4 md:px-14">
         <div className="w-full lg:w-1/3">
           <h3 className="text-[20px] font-extrabold mb-4">Contact Details</h3>
           <ul className="space-y-2">
@@ -36,7 +43,7 @@ const Footer = () => {
                 target="_blank"
                 className="flex gap-2 hover:underline"
               >
-               <Facebook/> Facebook
+                <Facebook /> Facebook
               </Link>
             </li>
             <li>
@@ -45,7 +52,7 @@ const Footer = () => {
                 target="_blank"
                 className="flex gap-2 hover:underline"
               >
-               <Linkedin /> LinkedIn
+                <Linkedin /> LinkedIn
               </Link>
             </li>
           </ul>
@@ -55,18 +62,18 @@ const Footer = () => {
           <h3 className="text-[20px] font-extrabold mb-4">Quick Links</h3>
           <ul className="space-y-2">
             <li>
-              <Link href="#" className="hover:underline">
+              <Link href="/all-products" className="hover:underline">
+                All Products
+              </Link>
+            </li>
+            <li>
+              <Link href="/about" className="hover:underline">
                 About Us
               </Link>
             </li>
             <li>
               <Link href="#" className="hover:underline">
                 Services
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="hover:underline">
-                Products
               </Link>
             </li>
           </ul>
