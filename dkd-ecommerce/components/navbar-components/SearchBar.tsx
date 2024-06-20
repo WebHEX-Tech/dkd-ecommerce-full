@@ -80,7 +80,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <div className="relative md:flex gap-3 border border-gray-400 px-3 py-1 items-center rounded-lg hidden">
+    <div className="relative md:flex gap-3 border border-gray-400 mx-4 px-3 py-1 items-center rounded-lg hidden">
       <input
         className="outline-none max-sm:max-w-[120px] border-r border-gray-300"
         placeholder="Search..."
@@ -94,20 +94,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
       >
         <Search className="cursor-pointer hover:text-red-1" />
       </button>
-       {searchResults.length > 0 && /*0 ? (
-        <div
-          className="absolute top-8 left-0 mt-2 p-3 bg-white border border-gray-300 rounded-lg w-full max-w-[300px] shadow-xl z-10 overflow-hidden"
-          ref={searchResultsRef}
-        >
-          No results found for "{query}"
-        </div>
-      ) : */ ( 
+      {searchResults.length > 0 && (
         <div
           className="absolute top-8 left-0 mt-2 bg-white border border-gray-300 rounded-lg w-full max-w-[300px] shadow-xl z-10 overflow-hidden"
           ref={searchResultsRef}
         >
           <ul>
-            {searchResults.map((result) => (
+            {searchResults.slice(0, 6).map((result) => (
               <li
                 key={result._id}
                 className="flex items-center justify-start gap-2 px-4 py-2 hover:bg-red-5 hover:underline hover:text-red-6 cursor-pointer"
@@ -131,6 +124,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 </div>
               </li>
             ))}
+            {searchResults.length > 6 && (
+              <li
+                className="flex items-center justify-start gap-2 px-4 py-1 underline bg-red-2 hover:bg-red-5 hover:text-red-6 cursor-pointer"
+                onClick={() => router.push(`/search/${query}`)}
+              >
+                <p>See All {searchResults.length} Products</p>
+              </li>
+            )}
           </ul>
         </div>
       )}

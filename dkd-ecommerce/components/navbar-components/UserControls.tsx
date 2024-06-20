@@ -14,7 +14,7 @@ const UserControls: React.FC = () => {
   const [searchResults, setSearchResults] = useState<ProductType[]>([]);
 
   return (
-    <div className="gap-4 items-center flex">
+    <div className="gap-4 items-center flex font-semibold text-[16px]">
       <SearchBarMobile
         query={query}
         setQuery={setQuery}
@@ -22,8 +22,16 @@ const UserControls: React.FC = () => {
         setSearchResults={setSearchResults}
       />
       <Link
+        href="/orders"
+        className={`hover:text-red-1 hover:underline max-lg:hidden ${
+          pathname === "/orders" && "text-red-1 underline"
+        }`}
+      >
+        Orders
+      </Link>
+      <Link
         href="/cart"
-        className={`flex items-center gap-2 border border-red-7 rounded-lg px-2 py-1 bg-red-5 text-red-6 transform transition duration-300 ease-in-out hover:border-red-3 hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.2)] hover:bg-red-3 hover:text-white max-lg:hidden ${
+        className={`flex items-center text-nowrap gap-2 border border-red-7 rounded-lg px-2 py-1 bg-red-5 text-red-6 transform transition duration-300 ease-in-out hover:border-red-3 hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.2)] hover:bg-red-3 hover:text-white max-lg:hidden ${
           pathname === "/cart" &&
           "border-red-6 bg-gradient-to-t from-red-1 to-red-4 text-white"
         }`}

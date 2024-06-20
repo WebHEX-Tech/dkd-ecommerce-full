@@ -22,7 +22,20 @@ export const GET = async (req: NextRequest) => {
       }
     }))
 
-    return NextResponse.json(orderDetails, { status: 200 });
+    if (!orderDetails) {
+      return new NextResponse(
+        JSON.stringify({ message: "Order not found" }),
+        { status: 404 }
+      );
+    }
+    return new NextResponse(JSON.stringify(orderDetails), {
+      status: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    });
   } catch (err) {
     console.log("[orders_GET]", err)
     return new NextResponse("Internal Server Error", { status: 500 });

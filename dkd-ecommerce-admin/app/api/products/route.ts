@@ -83,7 +83,20 @@ export const GET = async (req: NextRequest) => {
       .populate({ path: "collections", model: Collection })
       .populate({ path: "category", model: Category });
 
-    return NextResponse.json(products, { status: 200 });
+      if (!products) {
+        return new NextResponse(
+          JSON.stringify({ message: "Product not found" }),
+          { status: 404 }
+        );
+      }
+      return new NextResponse(JSON.stringify(products), {
+        status: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET",
+          "Access-Control-Allow-Headers": "Content-Type",
+        },
+      });
   } catch (err) {
     console.log("[products_GET]", err);
     return new NextResponse("Internal Error", { status: 500 });

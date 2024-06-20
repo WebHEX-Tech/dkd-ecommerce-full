@@ -40,6 +40,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter"){
         router.push(`/search/${query}`)
+        setFullscreenSearch(false);
     }
   }
 

@@ -11,7 +11,14 @@ interface ProductCardProps {
 
 const ProductCard = ({ product, updateSignedInUser }: ProductCardProps) => {
   const categoryTitle =
-    product.category.length > 0 ? product.category[0].title : "No Category";
+    product.collections.length > 0 ? product.collections[0].title : "No Category";
+
+  const stock = product.stocks;
+  const isOutOfStock = stock === 0 || stock === null || stock < 0;
+  const badgeText = isOutOfStock ? "Out of Stock" : "In Stock";
+  const badgeStyle = isOutOfStock
+    ? "text-small-medium text-red-600 transform transition duration-300 group-hover:text-red-2"
+    : "text-small-medium text-green-600 transform transition duration-300 group-hover:text-red-2";
 
   return (
     <div className="group">
@@ -35,10 +42,16 @@ const ProductCard = ({ product, updateSignedInUser }: ProductCardProps) => {
             <p className="text-small-medium text-grey-1 transform transition duration-300 group-hover:text-red-2">
               {categoryTitle}
             </p>
+            <p className={badgeStyle}>
+              {badgeText}
+            </p>
           </div>
           <div className="flex justify-between items-center mt-2">
             <p className="text-body-bold transform transition duration-300 group-hover:text-white">
-              ₱{product.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+              ₱
+              {product.price.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+              })}
             </p>
           </div>
         </div>

@@ -21,7 +21,7 @@ const NavigationLinks: React.FC<NavigationLinksProps> = ({
   const pathname = usePathname();
 
   return (
-    <div className="flex gap-4 text-base-bold items-center max-lg:hidden">
+    <div className="flex gap-4 font-semibold text-[16px] items-center max-xl:hidden text-nowrap">
       <Link
         href="/"
         className={`hover:text-red-1 hover:underline ${
@@ -29,6 +29,14 @@ const NavigationLinks: React.FC<NavigationLinksProps> = ({
         }`}
       >
         Home
+      </Link>
+      <Link
+        href="/all-products"
+        className={`hover:text-red-1 hover:underline ${
+          pathname === "/all-products" && "text-red-1 underline"
+        }`}
+      >
+        All Products
       </Link>
       <NavigationMenu>
         <NavigationMenuList>
@@ -88,12 +96,12 @@ const NavigationLinks: React.FC<NavigationLinksProps> = ({
         </NavigationMenuList>
       </NavigationMenu>
       <Link
-        href="/orders"
+        href="/about"
         className={`hover:text-red-1 hover:underline ${
-          pathname === "/orders" && "text-red-1 underline"
+          pathname === "/about" && "text-red-1 underline"
         }`}
       >
-        Orders
+        About
       </Link>
     </div>
   );

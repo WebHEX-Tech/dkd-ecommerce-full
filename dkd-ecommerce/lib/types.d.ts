@@ -17,7 +17,7 @@ type ProductType = {
   description: string;
   media: [string];
   category: CategoryType[];
-  collections: [string];
+  collections: CollectionType[];
   tags: [string];
   price: number;
   stocks: number;

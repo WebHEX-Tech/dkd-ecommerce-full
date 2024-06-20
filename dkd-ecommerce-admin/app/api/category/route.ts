@@ -48,7 +48,20 @@ export const GET = async (req: NextRequest) => {
       .sort({ createdAt: "desc" })
       .populate({ path: "collections", model: Collection });
 
-    return NextResponse.json(category, { status: 200 });
+      if (!category) {
+        return new NextResponse(
+          JSON.stringify({ message: "Category not found" }),
+          { status: 404 }
+        );
+      }
+      return new NextResponse(JSON.stringify(category), {
+        status: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET",
+          "Access-Control-Allow-Headers": "Content-Type",
+        },
+      });
   } catch (err) {
     console.log("[category_GET]", err);
     return new NextResponse("Internal Server Error", { status: 500 });

@@ -47,7 +47,20 @@ export const GET = async (req: NextRequest) => {
 
     const collections = await Collection.find().sort({ createdAt: "desc" })
 
-    return NextResponse.json(collections, { status: 200 })
+    if (!collections) {
+      return new NextResponse(
+        JSON.stringify({ message: "Collections not found" }),
+        { status: 404 }
+      );
+    }
+    return new NextResponse(JSON.stringify(collections), {
+      status: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    });
   } catch (err) {
     console.log("[collections_GET]", err)
     return new NextResponse("Internal Server Error", { status: 500 })

@@ -11,6 +11,7 @@ import {
 import { usePathname } from "next/navigation";
 import { Menu, ShoppingCart, X } from "lucide-react";
 import useCart from "@/lib/hooks/useCart";
+import { Separator } from "@radix-ui/react-separator";
 
 interface DropdownMenuProps {
   collections: CollectionType[];
@@ -26,7 +27,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   const cart = useCart();
 
   return (
-    <div className="relative flex items-center lg:hidden">
+    <div className="relative flex items-center xl:hidden">
       {dropdownMenu ? (
         <X
           className="cursor-pointer text-red-1"
@@ -39,7 +40,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         />
       )}
       {dropdownMenu && (
-        <div className="absolute top-8 left-0 flex flex-col gap-4 p-3 rounded-lg border bg-white text-base-bold">
+        <div className="absolute top-8 left-0 flex flex-col gap-4 p-3 rounded-lg border bg-white font-semibold text-[16px]">
           <Link
             href="/"
             className={`hover:text-red-1 hover:underline ${
@@ -47,6 +48,14 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
             }`}
           >
             Home
+          </Link>
+          <Link
+            href="/all-products"
+            className={`hover:text-red-1 hover:underline ${
+              pathname === "/all-products" && "text-red-1 underline"
+            }`}
+          >
+            All Products
           </Link>
           <NavigationMenu>
             <NavigationMenuList>
@@ -117,8 +126,16 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
             </NavigationMenuList>
           </NavigationMenu>
           <Link
-            href="/orders"
+            href="/about"
             className={`hover:text-red-1 hover:underline ${
+              pathname === "/about" && "text-red-1 underline"
+            }`}
+          >
+            About
+          </Link>
+          <Link
+            href="/orders"
+            className={`hover:text-red-1 hover:underline lg:hidden border-t border-gray-300 pt-2 ${
               pathname === "/orders" && "text-red-1 underline"
             }`}
           >
@@ -126,7 +143,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           </Link>
           <Link
             href="/cart"
-            className={`flex items-center gap-2 border border-red-7 rounded-lg px-2 py-1 bg-red-5 text-red-6 transform transition duration-300 ease-in-out hover:border-red-3 hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.2)] hover:bg-red-3 hover:text-white ${
+            className={`flex items-center gap-2 border border-red-7 rounded-lg px-2 py-1 bg-red-5 text-red-6 transform transition duration-300 ease-in-out hover:border-red-3 hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.2)] hover:bg-red-3 hover:text-white lg:hidden ${
               pathname === "/cart" &&
               "border-red-6 bg-gradient-to-t from-red-1 to-red-4 text-white"
             }`}

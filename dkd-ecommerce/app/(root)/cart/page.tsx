@@ -23,21 +23,11 @@ const Cart = () => {
     name: user?.fullName,
   };
 
-  const handleCheckout = async () => {
-    try {
-      if (!user) {
-        router.push("sign-in");
-      } else {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/checkout`, {
-          method: "POST",
-          body: JSON.stringify({ cartItems: cart.cartItems, customer }),
-        });
-        const data = await res.json();
-        window.location.href = data.url;
-        console.log(data);
-      }
-    } catch (err) {
-      console.log("[checkout_POST]", err);
+  const handleCheckout = () => {
+    if (!user) {
+      router.push("/sign-in");
+    } else {
+      router.push("/checkout");
     }
   };
 
@@ -54,7 +44,7 @@ const Cart = () => {
             {cart.cartItems.map((cartItem) => (
               <div
                 key={cartItem.item._id}
-                className="w-full rounded-md flex max-sm:flex-col max-sm:gap-3 hover:bg-red-5 px-4 py-3 items-center max-sm:items-start justify-between"
+                className="w-full flex border-b border-red-7 max-sm:flex-col max-sm:gap-3 hover:bg-red-5 px-4 py-3 items-center max-sm:items-start justify-between"
               >
                 <div className="flex items-center">
                   <Image
@@ -72,45 +62,72 @@ const Cart = () => {
                     {cartItem.size && (
                       <p className="text-small-medium">{cartItem.size}</p>
                     )}
-                    <p className="text-small-medium">₱{cartItem.item.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
-                    <p className={`text-small-medium ${cartItem.item.stocks > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    <p className="text-small-medium">
+                      ₱
+                      {cartItem.item.price.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                      })}
+                    </p>
+                    <p
+                      className={`text-small-medium ${
+                        cartItem.item.stocks > 0
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }`}
+                    >
                       {cartItem.item.stocks > 0 ? `In Stock` : "Out of Stock"}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex gap-4 items-center">
-                  <MinusCircle
-                    className={`hover:text-red-1 cursor-pointer ${cartItem.quantity <= 1 ? "text-gray-400 cursor-not-allowed" : ""}`}
-                    onClick={() => cartItem.quantity > 1 && cart.decreaseQuantity(cartItem.item._id)}
-                  />
-                  <input
-                    type="number"
-                    value={cartItem.quantity}
-                    onChange={(e) => {
-                      let newQuantity = parseInt(e.target.value);
-                      if (isNaN(newQuantity) || newQuantity < 1) {
-                        newQuantity = 1;
-                      } else if (newQuantity > cartItem.item.stocks) {
-                        newQuantity = cartItem.item.stocks;
+                  <div className="flex gap-4 items-center border-r border-gray-300 pr-4">
+                    <MinusCircle
+                      className={`hover:text-red-1 cursor-pointer ${
+                        cartItem.quantity <= 1
+                          ? "text-gray-400 cursor-not-allowed"
+                          : ""
+                      }`}
+                      onClick={() =>
+                        cartItem.quantity > 1 &&
+                        cart.decreaseQuantity(cartItem.item._id)
                       }
-                      cart.updateQuantity(cartItem.item._id, newQuantity);
-                    }}
-                    min="1"
-                    max={cartItem.item.stocks}
-                    className="border px-2 py-1 rounded-lg text-body-bold w-[4.5rem]"
-                    disabled={cartItem.item.stocks <= 0}
-                  />
-                  <PlusCircle
-                    className={`hover:text-red-1 cursor-pointer ${cartItem.quantity >= cartItem.item.stocks ? "text-gray-400 cursor-not-allowed" : ""}`}
-                    onClick={() => cartItem.quantity < cartItem.item.stocks && cart.increaseQuantity(cartItem.item._id)}
+                    />
+                    <input
+                      type="number"
+                      value={cartItem.quantity}
+                      onChange={(e) => {
+                        let newQuantity = parseInt(e.target.value);
+                        if (isNaN(newQuantity) || newQuantity < 1) {
+                          newQuantity = 1;
+                        } else if (newQuantity > cartItem.item.stocks) {
+                          newQuantity = cartItem.item.stocks;
+                        }
+                        cart.updateQuantity(cartItem.item._id, newQuantity);
+                      }}
+                      min="1"
+                      max={cartItem.item.stocks}
+                      className="border px-2 py-1 rounded-lg text-body-bold w-[4.5rem]"
+                      disabled={cartItem.item.stocks <= 0}
+                    />
+                    <PlusCircle
+                      className={`hover:text-red-1 cursor-pointer ${
+                        cartItem.quantity >= cartItem.item.stocks
+                          ? "text-gray-400 cursor-not-allowed"
+                          : ""
+                      }`}
+                      onClick={() =>
+                        cartItem.quantity < cartItem.item.stocks &&
+                        cart.increaseQuantity(cartItem.item._id)
+                      }
+                    />
+                  </div>
+
+                  <Trash
+                    className="hover:text-red-1 cursor-pointer"
+                    onClick={() => cart.removeItem(cartItem.item._id)}
                   />
                 </div>
-
-                <Trash
-                  className="hover:text-red-1 cursor-pointer"
-                  onClick={() => cart.removeItem(cartItem.item._id)}
-                />
               </div>
             ))}
           </div>
@@ -126,12 +143,18 @@ const Cart = () => {
         </p>
         <div className="flex justify-between text-body-semibold">
           <span>Total Amount</span>
-          <span>₱ {totalRounded.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+          <span>
+            ₱{" "}
+            {totalRounded.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+          </span>
         </div>
         <button
           className="rounded-lg text-body-bold bg-white py-3 w-full transform transition duration-300 cursor-pointer hover:bg-[green] hover:text-white"
           onClick={handleCheckout}
-          disabled={cart.cartItems.length === 0 || cart.cartItems.some(cartItem => cartItem.item.stocks <= 0)}
+          disabled={
+            cart.cartItems.length === 0 ||
+            cart.cartItems.some((cartItem) => cartItem.item.stocks <= 0)
+          }
         >
           Proceed to Checkout
         </button>

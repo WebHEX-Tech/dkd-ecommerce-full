@@ -77,7 +77,7 @@ const CollectionDetails = async ({
 
       {hasProducts ? (
         Object.keys(productsByCategory).map((categoryId) => (
-          <div key={categoryId} className="w-full px-0 xl:px-[6rem]">
+          <div key={categoryId} className="w-full px-0 xl:px-[6rem] border-b border-gray-200">
             <Link
               href={`/category/${productsByCategory[categoryId]._id}`}
               className="font-bold text-xl text-left underline hover:text-red-1"
