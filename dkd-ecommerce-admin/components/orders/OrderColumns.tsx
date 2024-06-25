@@ -33,6 +33,9 @@ export const columns: ColumnDef<OrderColumnType>[] = [
   {
     accessorKey: "total",
     header: "Total (₱)",
+    cell: ({ row }) => {
+      return row.original.total.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    },
   },
   {
     accessorKey: "createdAt",
