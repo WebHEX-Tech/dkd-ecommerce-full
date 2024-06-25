@@ -6,12 +6,11 @@ import Category from "@/lib/models/Category";
 
 export const POST = async (req: NextRequest) => {
   try {
-    const { userId } = auth();
+    // const { userId } = auth();
 
-    if (!userId) {
-      return new NextResponse("Unauthorized", { status: 403 });
-    }
-
+    // if (!userId) {
+    //   return new NextResponse("Unauthorized", { status: 403 });
+    // }
     await connectToDB();
 
     const { title, collections } = await req.json();

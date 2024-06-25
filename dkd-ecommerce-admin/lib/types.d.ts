@@ -1,3 +1,11 @@
+type UserType = {
+  _id: string;
+  role: string;
+  firstname: string;
+  lastname: string;
+  username: string;
+}
+
 type CollectionType = {
   _id: string;
   title: string;
@@ -31,14 +39,13 @@ type ProductType = {
 type OrderColumnType = {
   _id: string;
   customer: string;
-  products: number;
-  totalAmount: number;
+  cartItems: number;
+  total: number;
   createdAt: string;
 }
 
 type OrderItemType = {
   product: ProductType
-  color: string;
   size: string;
   quantity: number;
 }
@@ -47,4 +54,5 @@ type CustomerType = {
   clerkId: string;
   name: string;
   email: string;
+  orders: OrderColumnType[];
 }

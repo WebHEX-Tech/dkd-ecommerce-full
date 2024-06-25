@@ -1,3 +1,4 @@
+import { Separator } from "@/components/ui/separator";
 import { getOrders } from "@/lib/actions/actions";
 
 import { auth } from "@clerk/nextjs";
@@ -7,11 +8,10 @@ const Orders = async () => {
   const { userId } = auth();
   const orders = await getOrders(userId as string);
 
-  console.log(orders[0]);
-
   return (
-    <div className="px-10 py-5 max-sm:px-3 h-screen">
+    <div className="px-10 py-5 mb-52 max-sm:px-3 h-full">
       <p className="text-heading3-bold my-10">Your Orders</p>
+      <Separator className="my-6 bg-red-7" />
       {!orders ||
         (orders.length === 0 && (
           <p className="text-body-bold my-5">You have no orders yet.</p>
@@ -19,39 +19,33 @@ const Orders = async () => {
 
       <div className="flex flex-col gap-10">
         {orders?.map((order: OrderType) => (
-          <div className="flex flex-col gap-8 p-4 hover:bg-grey-1">
-            <div className="flex gap-20 max-md:flex-col max-md:gap-3">
-              <p className="text-base-bold">Order ID: {order._id}</p>
+          <div key={order._id} className="flex flex-col border-b rounded-md border-gray-200 gap-8 p-4 transform transition duration-200 hover:bg-red-5">
+            <div className="flex justify-between gap-20 max-md:flex-col max-md:gap-3">
+              <p className="text-base-bold text-gray-500">Order ID: {order._id}</p>
               <p className="text-base-bold">
-                Total Amount: ${order.totalAmount}
+                Total Amount: ₱{order.total}{" "}
+                <span className="text-gray-400 font-normal text-[13px]">
+                  (incl. shipping)
+                </span>
               </p>
             </div>
 
-            <div className="flex flex-col gap-5">
-              {order.products.map((orderItem: OrderItemType) => (
-                <div className="flex gap-4">
+            <div className="flex flex-col lg:flex-row gap-5">
+              {order.cartItems.map((orderItem: OrderItemType) => (
+                <div key={orderItem._id} className="flex rounded-md bg-white p-4 gap-2 sm:gap-4">
                   <Image
                     src={orderItem.product.media[0]}
                     alt={orderItem.product.title}
                     width={100}
                     height={100}
-                    className="w-32 h-32 object-cover rounded-lg"
+                    className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-lg"
                   />
                   <div className="flex flex-col justify-between">
                     <p className="text-small-medium">
-                      Title:{" "}
-                      <span className="text-small-bold">
+                      <span className="font-semibold">
                         {orderItem.product.title}
                       </span>
                     </p>
-                    {orderItem.color && (
-                      <p className="text-small-medium">
-                        Color:{" "}
-                        <span className="text-small-bold">
-                          {orderItem.color}
-                        </span>
-                      </p>
-                    )}
                     {orderItem.size && (
                       <p className="text-small-medium">
                         Size:{" "}
@@ -62,11 +56,15 @@ const Orders = async () => {
                     )}
                     <p className="text-small-medium">
                       Unit price:{" "}
-                      <span className="text-small-bold">{orderItem.product.price}</span>
+                      <span className="text-small-bold">
+                        ₱{orderItem.product.price}
+                      </span>
                     </p>
                     <p className="text-small-medium">
                       Quantity:{" "}
-                      <span className="text-small-bold">{orderItem.quantity}</span>
+                      <span className="text-small-bold">
+                        {orderItem.quantity}
+                      </span>
                     </p>
                   </div>
                 </div>

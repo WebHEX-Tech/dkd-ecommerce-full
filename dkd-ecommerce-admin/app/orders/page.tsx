@@ -1,10 +1,9 @@
 "use client"
-
 import { DataTable } from "@/components/custom ui/DataTable"
 import Loader from "@/components/custom ui/Loader"
 import { columns } from "@/components/orders/OrderColumns"
 import { Separator } from "@/components/ui/separator"
-
+import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 
 const Orders = () => {
@@ -25,6 +24,11 @@ const Orders = () => {
   useEffect(() => {
     getOrders()
   }, [])
+
+  const { data: session } = useSession();
+  if(!session){
+    return null;
+  }
 
   return loading ? <Loader /> : (
     <div className="px-10 py-5">

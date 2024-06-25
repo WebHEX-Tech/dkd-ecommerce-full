@@ -39,12 +39,11 @@ export const POST = async (
   { params }: { params: { categoryId: string } }
 ) => {
   try {
-    const { userId } = auth();
+    // const { userId } = auth();
 
-    if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
-
+    // if (!userId) {
+    //   return new NextResponse("Unauthorized", { status: 401 });
+    // }
     await connectToDB();
 
     let category = await Category.findById(params.categoryId);
@@ -79,12 +78,11 @@ export const DELETE = async (
   { params }: { params: { categoryId: string } }
 ) => {
   try {
-    const { userId } = auth();
+    // const { userId } = auth();
 
-    if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
-
+    // if (!userId) {
+    //   return new NextResponse("Unauthorized", { status: 401 });
+    // }
     await connectToDB();
 
     await Category.findByIdAndDelete(params.categoryId);

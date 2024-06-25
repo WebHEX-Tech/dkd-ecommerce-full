@@ -1,39 +1,61 @@
 "use client";
-
 import { useState, useEffect } from "react";
-import { ChangeEvent, FormEvent } from "react";
 import useCart from "@/lib/hooks/useCart";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
+import {
+  regions,
+  provinces,
+  cities,
+  barangays,
+} from "select-philippines-address";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Checkout = () => {
   const { user } = useUser();
+  console.log(user)
   const cart = useCart();
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
+  const [loadingOrder, setLoadingOrder] = useState(false);
   const [shippingRate, setShippingRate] = useState(0);
+  const [selectedRegionID, setSelectedRegionID] = useState("");
+  const [selectedProvinceName, setSelectedProvinceName] = useState("");
+  const [selectedCityName, setSelectedCityName] = useState("");
+  const [totalRounded, setTotalRounded] = useState(0);
   const [formValues, setFormValues] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phoneNumber: "",
     companyName: "",
-    country: "",
+    region: "",
     province: "",
+    city: "",
+    barangay: "",
     address: "",
-    zipCode: "",
     orderNotes: "",
     paymentMethod: "cash-on-delivery",
   });
+
+  const [regionData, setRegionData] = useState([]);
+  const [provinceData, setProvinceData] = useState([]);
+  const [cityData, setCityData] = useState([]);
+  const [barangayData, setBarangayData] = useState([]);
 
   const subtotal = cart.cartItems.reduce(
     (acc, cartItem) => acc + cartItem.item.price * cartItem.quantity,
     0
   );
   const subtotalRounded = parseFloat(subtotal.toFixed(2));
-  const total = subtotalRounded + shippingRate;
-  const totalRounded = parseFloat(total.toFixed(2));
 
   useEffect(() => {
     if (cart.cartItems.length === 0) {
@@ -52,80 +74,210 @@ const Checkout = () => {
     }
   }, [user]);
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
+  useEffect(() => {
+    fetchRegions();
+  }, []);
 
-    if (
-      ["country", "province", "address", "zipCode"].includes(name)
-    ) {
-      // Fetch new shipping rate based on address changes
-      fetchShippingRate({
-        ...formValues,
-        [name]: value,
+  useEffect(() => {
+    if (formValues.barangay) {
+      calculateShippingRate();
+    }
+  }, [selectedRegionID, selectedCityName, selectedProvinceName]);
+
+  useEffect(() => {
+    setTotalRounded(subtotalRounded + shippingRate);
+  }, [subtotalRounded, shippingRate]);
+
+  const fetchRegions = () => {
+    regions().then((regions: any) => {
+      const correctedRegions = regions.map((region: any) => {
+        if (
+          region.region_name.toLowerCase() === "region ix (zamboanga peninzula)"
+        ) {
+          return {
+            ...region,
+            region_name: "Region IX (Zamboanga Peninsula)",
+          };
+        }
+        return region;
       });
+      setRegionData(correctedRegions);
+    });
+  };
+
+  const handleRegionChange = (regionName: any) => {
+    const selectedRegion: any = regionData.find(
+      (region: any) => region.region_name === regionName
+    );
+    if (selectedRegion) {
+      setSelectedRegionID(selectedRegion.id);
+      provinces(selectedRegion.region_code).then((province: any) =>
+        setProvinceData(province)
+      );
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        region: regionName,
+        province: "",
+        city: "",
+        barangay: "",
+      }));
+    } else {
+      setSelectedRegionID("");
+      setProvinceData([]);
     }
   };
 
-  const handlePaymentChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      paymentMethod: e.target.value,
-    }));
-  };
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    // Mock order placement
-    alert(
-      `Order placed successfully with ${formValues.paymentMethod.replace(
-        "-",
-        " "
-      )}`
+  const handleProvinceChange = (provinceName: any) => {
+    const selectedProvince: any = provinceData.find(
+      (province: any) => province.province_name === provinceName
     );
-    cart.clearCart();
-    router.push("/");
+    if (selectedProvince) {
+      setSelectedProvinceName(selectedProvince.province_name);
+      cities(selectedProvince.province_code).then((city: any) =>
+        setCityData(city)
+      );
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        province: provinceName,
+        city: "",
+        barangay: "",
+      }));
+    } else {
+      setCityData([]);
+    }
   };
 
-  const fetchShippingRate = async (addressData: typeof formValues) => {
+  const handleCityChange = (cityName: any) => {
+    const selectedCity: any = cityData.find(
+      (city: any) => city.city_name === cityName
+    );
+    if (selectedCity) {
+      setSelectedCityName(selectedCity.city_name);
+      barangays(selectedCity.city_code).then((barangay: any) =>
+        setBarangayData(barangay)
+      );
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        city: cityName,
+        barangay: "",
+      }));
+    } else {
+      setBarangayData([]);
+    }
+  };
+
+  const handleBrgyChange = (brgyName: any) => {
+    const selectedBgry: any = barangayData.find(
+      (brgy: any) => brgy.brgy_name === brgyName
+    );
+    if (selectedBgry) {
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        barangay: brgyName,
+      }));
+      calculateShippingRate();
+    }
+  };
+
+  const handleChange = async (e: any) => {
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
+  };
+
+  const calculateShippingRate = () => {
+    setLoading(true);
+
+    setTimeout(() => {
+      const baseRate = 0;
+      let rate = baseRate;
+
+      const selectedRegion: any = regionData.find(
+        (region: any) => region.id === selectedRegionID
+      );
+      if (selectedRegion) {
+        const regionId = selectedRegion.id;
+
+        if ([1, 2, 3, 4, 5, 6, 14, 15].includes(regionId)) {
+          rate = 190;
+        } else if ([7, 8, 9].includes(regionId)) {
+          rate = 140;
+        } else if ([10, 11, 12, 13, 16, 17].includes(regionId)) {
+          rate = 120;
+        }
+      }
+
+      if (selectedCityName.toLowerCase() === "zamboanga city") {
+        rate = 0;
+      } else if (selectedProvinceName.toLowerCase() === "zamboanga del sur") {
+        rate = 50;
+      }
+
+      setShippingRate(rate);
+      setLoading(false);
+    }, 2000);
+  };
+
+  const handlePlaceOrder = async (e: any) => {
+    e.preventDefault();
+    setLoadingOrder(true);
+
+    const orderData = {
+      customerClerkId: {
+        id:user?.id,
+        name:user?.fullName,
+        email:user?.emailAddresses[0].emailAddress,
+      },
+      cartItems: cart.cartItems,
+      customer: {
+        firstName: formValues.firstName,
+        lastName: formValues.lastName,
+        email: formValues.email,
+        phoneNumber: formValues.phoneNumber,
+      },
+      shippingAddress: {
+        address: formValues.address,
+        region: formValues.region,
+        province: formValues.province,
+        city: formValues.city,
+        barangay: formValues.barangay,
+      },
+      orderNotes: formValues.orderNotes,
+      paymentMethod: formValues.paymentMethod,
+      total: totalRounded,
+    };
+
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/shipping-rates`,
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/checkout`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            country: addressData.country,
-            province: addressData.province,
-            zipCode: addressData.zipCode,
-          }),
+          body: JSON.stringify(orderData),
         }
       );
 
-      if (res.ok) {
-        const data = await res.json();
-        setShippingRate(data.rate); 
+      if (response.ok) {
+        const session = await response.json();
+        router.push("/order_success");
       } else {
-        setShippingRate(0);
+        console.error("Failed to place order");
       }
-    } catch (err) {
-      console.error("Failed to fetch shipping rate", err);
-      setShippingRate(0);
+    } catch (error) {
+      console.error("Error during order placement", error);
+    } finally {
+      setLoadingOrder(false);
     }
   };
 
   return (
-    <div className="flex flex-col w-full items-center py-8 px-5 mx-auto">
+    <div className="flex flex-col w-full items-center py-8 px-5 mx-auto mb-10">
       <h1 className="text-heading2-bold mb-5">Checkout</h1>
 
       <form
-        onSubmit={handleSubmit}
         className="w-full flex flex-col justify-center lg:flex-row gap-6"
+        onSubmit={handlePlaceOrder}
       >
         <div className="flex flex-col gap-4">
           <div className="bg-white border border-gray-200 rounded-md shadow-lg p-6">
@@ -180,39 +332,73 @@ const Checkout = () => {
               className="border p-3 rounded-md w-full mb-4"
             />
             <div className="flex flex-col md:flex-row gap-4">
-              <input
-                type="text"
-                name="country"
-                placeholder="Country"
-                value={formValues.country}
-                onChange={handleChange}
-                className="border p-3 rounded-md flex-1"
-                required
-              />
-              <input
-                type="text"
-                name="province"
-                placeholder="Province/Region"
-                value={formValues.province}
-                onChange={handleChange}
-                className="border p-3 rounded-md flex-1"
-                required
-              />
+              <Select onValueChange={handleRegionChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Region" />
+                </SelectTrigger>
+                <SelectContent>
+                  {regionData.map((region: any) => (
+                    <SelectItem
+                      key={region.region_code}
+                      value={region.region_name}
+                    >
+                      {region.region_name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select onValueChange={handleProvinceChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Province" />
+                </SelectTrigger>
+                <SelectContent>
+                  {provinceData.map((province: any) => (
+                    <SelectItem
+                      key={province.province_code}
+                      value={province.province_name}
+                    >
+                      {province.province_name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
+
+            <Select onValueChange={handleCityChange}>
+              <SelectTrigger className="w-full mt-4">
+                <SelectValue placeholder="Select City" />
+              </SelectTrigger>
+              <SelectContent>
+                {cityData.map((city: any) => (
+                  <SelectItem key={city.city_code} value={city.city_name}>
+                    {city.city_name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select onValueChange={handleBrgyChange}>
+              <SelectTrigger className="w-full mt-4">
+                <SelectValue placeholder="Select Barangay" />
+              </SelectTrigger>
+              <SelectContent>
+                {barangayData.map((barangay: any) => (
+                  <SelectItem
+                    key={barangay.brgy_code}
+                    value={barangay.brgy_name}
+                  >
+                    {barangay.brgy_name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
             <input
               type="text"
               name="address"
-              placeholder="Address"
+              placeholder="Address Line"
               value={formValues.address}
-              onChange={handleChange}
-              className="border p-3 rounded-md w-full mt-4"
-              required
-            />
-            <input
-              type="text"
-              name="zipCode"
-              placeholder="Zip Code"
-              value={formValues.zipCode}
               onChange={handleChange}
               className="border p-3 rounded-md w-full mt-4"
               required
@@ -247,7 +433,7 @@ const Checkout = () => {
                 </span>
               </div>
             ))}
-            <Separator className="bg-gray-300 my-4"/>
+            <Separator className="bg-gray-300 my-4" />
             <div className="flex justify-between mt-4">
               <span>Subtotal:</span>
               <span>
@@ -259,21 +445,191 @@ const Checkout = () => {
             </div>
             <div className="flex justify-between mt-2">
               <span>Shipping:</span>
-              <span>
-                ₱{" "}
-                {shippingRate.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                })}
-              </span>
+              {loading ? (
+                <span className="flex items-center space-x-2">
+                  <svg
+                    className="h-5 w-5 animate-spin stroke-red-400"
+                    viewBox="0 0 256 256"
+                  >
+                    <line
+                      x1="128"
+                      y1="32"
+                      x2="128"
+                      y2="64"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="24"
+                    ></line>
+                    <line
+                      x1="195.9"
+                      y1="60.1"
+                      x2="173.3"
+                      y2="82.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="24"
+                    ></line>
+                    <line
+                      x1="224"
+                      y1="128"
+                      x2="192"
+                      y2="128"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="24"
+                    ></line>
+                    <line
+                      x1="195.9"
+                      y1="195.9"
+                      x2="173.3"
+                      y2="173.3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="24"
+                    ></line>
+                    <line
+                      x1="128"
+                      y1="224"
+                      x2="128"
+                      y2="192"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="24"
+                    ></line>
+                    <line
+                      x1="60.1"
+                      y1="195.9"
+                      x2="82.7"
+                      y2="173.3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="24"
+                    ></line>
+                    <line
+                      x1="32"
+                      y1="128"
+                      x2="64"
+                      y2="128"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="24"
+                    ></line>
+                    <line
+                      x1="60.1"
+                      y1="60.1"
+                      x2="82.7"
+                      y2="82.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="24"
+                    ></line>
+                  </svg>
+                  <span className="text-4xl font-medium text-gray-500">
+                    Loading...
+                  </span>
+                </span>
+              ) : (
+                <span>
+                  ₱{" "}
+                  {shippingRate.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                  })}
+                </span>
+              )}
             </div>
             <div className="flex justify-between mt-4 font-bold">
               <span>Total:</span>
-              <span>
-                ₱{" "}
-                {totalRounded.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                })}
-              </span>
+              {loading ? (
+                <span className="flex items-center space-x-2">
+                  <svg
+                    className="h-5 w-5 animate-spin stroke-red-400"
+                    viewBox="0 0 256 256"
+                  >
+                    <line
+                      x1="128"
+                      y1="32"
+                      x2="128"
+                      y2="64"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="24"
+                    ></line>
+                    <line
+                      x1="195.9"
+                      y1="60.1"
+                      x2="173.3"
+                      y2="82.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="24"
+                    ></line>
+                    <line
+                      x1="224"
+                      y1="128"
+                      x2="192"
+                      y2="128"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="24"
+                    ></line>
+                    <line
+                      x1="195.9"
+                      y1="195.9"
+                      x2="173.3"
+                      y2="173.3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="24"
+                    ></line>
+                    <line
+                      x1="128"
+                      y1="224"
+                      x2="128"
+                      y2="192"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="24"
+                    ></line>
+                    <line
+                      x1="60.1"
+                      y1="195.9"
+                      x2="82.7"
+                      y2="173.3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="24"
+                    ></line>
+                    <line
+                      x1="32"
+                      y1="128"
+                      x2="64"
+                      y2="128"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="24"
+                    ></line>
+                    <line
+                      x1="60.1"
+                      y1="60.1"
+                      x2="82.7"
+                      y2="82.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="24"
+                    ></line>
+                  </svg>
+                  <span className="text-4xl font-medium text-gray-500">
+                    Loading...
+                  </span>
+                </span>
+              ) : (
+                <span>
+                  ₱{" "}
+                  {totalRounded.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                  })}
+                </span>
+              )}
             </div>
           </div>
 
@@ -285,7 +641,7 @@ const Checkout = () => {
                 name="paymentMethod"
                 value="cash-on-delivery"
                 checked={formValues.paymentMethod === "cash-on-delivery"}
-                onChange={handlePaymentChange}
+                onChange={handleChange}
                 className="cursor-pointer"
               />
               <label
@@ -300,8 +656,9 @@ const Checkout = () => {
           <button
             type="submit"
             className="bg-green-600 text-white rounded-md py-3 w-full text-center transform transition duration-300 hover:bg-green-700"
+            disabled={loading}
           >
-            Place Order
+            {loadingOrder ? "Placing Order..." : "Place Order"}
           </button>
         </div>
       </form>

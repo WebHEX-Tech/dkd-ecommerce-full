@@ -40,6 +40,21 @@ export const columns: ColumnDef<ProductType>[] = [
     header: "Stocks",
   },
   {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const stocks = row.original.stocks;
+
+      if (stocks === 0) {
+        return <span className="bg-red-500 text-white py-1 px-3 rounded-2xl">Out of Stock</span>;
+      } else if (stocks < 10) {
+        return <span className="bg-yellow-500 text-white py-1 px-3 rounded-2xl">In Stock</span>;
+      } else {
+        return <span className="bg-green-500 text-white py-1 px-3 rounded-2xl">In Stock</span>;
+      }
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => <Delete item="product" id={row.original._id} />,
   },

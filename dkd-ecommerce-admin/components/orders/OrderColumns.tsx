@@ -23,11 +23,15 @@ export const columns: ColumnDef<OrderColumnType>[] = [
     header: "Customer",
   },
   {
+    accessorKey: "address",
+    header: "Shipping Address",
+  },
+  {
     accessorKey: "products",
     header: "Products",
   },
   {
-    accessorKey: "totalAmount",
+    accessorKey: "total",
     header: "Total (₱)",
   },
   {

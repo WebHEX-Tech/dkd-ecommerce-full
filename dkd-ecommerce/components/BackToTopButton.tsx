@@ -64,22 +64,22 @@ const BackToTopButton = () => {
               id="radialGradient-1"
               r="108.959588%"
             >
-              <stop offset="0%" stop-color="#0099FF" />
-              <stop offset="60.9753877%" stop-color="#A033FF" />
-              <stop offset="93.482299%" stop-color="#FF5280" />
-              <stop offset="100%" stop-color="#FF7061" />
+              <stop offset="0%" stopColor="#0099FF" />
+              <stop offset="60.9753877%" stopColor="#A033FF" />
+              <stop offset="93.482299%" stopColor="#FF5280" />
+              <stop offset="100%" stopColor="#FF7061" />
             </radialGradient>
           </defs>
           <g
             fill="none"
-            fill-rule="evenodd"
+            fillRule="evenodd"
             id="logo"
             stroke="none"
-            stroke-width="1"
+            strokeWidth="1"
           >
             <rect
               fill="#FFFFFF"
-              fill-opacity="0"
+              fillOpacity="0"
               height="1024"
               id="bounding-box"
               width="1024"

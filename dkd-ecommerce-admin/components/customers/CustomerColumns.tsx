@@ -15,4 +15,11 @@ export const columns: ColumnDef<CustomerType>[] = [
     accessorKey: "email",
     header: "Email",
   },
+  {
+    accessorKey: "orders",
+    header: "Orders",
+    cell: ({ row }) => {
+      return row.original.orders.length;
+    },
+  },
 ];

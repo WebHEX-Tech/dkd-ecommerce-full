@@ -1,5 +1,5 @@
 "use client";
-import { Link } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 const About = () => {
@@ -27,7 +27,7 @@ const About = () => {
         <div className="mt-8">
           <Link
             href="/"
-            className="bg-gradient-to-t w-fit from-red-1 to-red-4 text-white text-lg px-6 py-3 border border-red-6 rounded-lg inline-block transform transition duration-300 ease-in-out hover:scale-110 hover:shadow-2xl text-nowrap"
+            className="bg-gradient-to-t from-red-1 to-red-4 text-white px-6 py-3 border border-red-6 rounded-lg transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl"
           >
             Back to Home
           </Link>

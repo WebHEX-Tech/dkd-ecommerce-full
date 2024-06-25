@@ -1,5 +1,6 @@
 "use client";
 
+import { Separator } from "@/components/ui/separator";
 import useCart from "@/lib/hooks/useCart";
 import { useUser } from "@clerk/nextjs";
 import { MinusCircle, PlusCircle, Trash } from "lucide-react";
@@ -32,10 +33,10 @@ const Cart = () => {
   };
 
   return (
-    <div className="flex gap-20 py-16 px-10 max-lg:flex-col max-sm:px-3 h-screen">
+    <div className="flex gap-20 py-16 px-10 mb-52 max-lg:flex-col max-sm:px-3 h-full">
       <div className="w-2/3 max-lg:w-full">
         <p className="text-heading3-bold">Shopping Cart</p>
-        <hr className="my-6" />
+        <Separator className="my-6 bg-red-7" />
 
         {cart.cartItems.length === 0 ? (
           <p className="text-body-bold">No products in cart</p>
@@ -44,7 +45,7 @@ const Cart = () => {
             {cart.cartItems.map((cartItem) => (
               <div
                 key={cartItem.item._id}
-                className="w-full flex border-b border-red-7 max-sm:flex-col max-sm:gap-3 hover:bg-red-5 px-4 py-3 items-center max-sm:items-start justify-between"
+                className="w-full flex border-b border-gray-200 max-sm:flex-col max-sm:gap-3 transform transition duration-200 hover:bg-red-5 px-4 py-3 items-center max-sm:items-start justify-between"
               >
                 <div className="flex items-center">
                   <Image

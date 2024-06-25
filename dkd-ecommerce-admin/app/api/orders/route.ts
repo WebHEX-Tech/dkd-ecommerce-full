@@ -13,11 +13,13 @@ export const GET = async (req: NextRequest) => {
 
     const orderDetails = await Promise.all(orders.map(async (order) => {
       const customer = await Customer.findOne({ clerkId: order.customerClerkId })
+
       return {
         _id: order._id,
-        customer: customer.name,
-        products: order.products.length,
-        totalAmount: order.totalAmount,
+        customer: `${order.customer.firstName} ${order.customer.lastName}`,
+        address: `${order.shippingAddress.address}, ${order.shippingAddress.city}, ${order.shippingAddress.province}`,
+        products: order.cartItems.length,
+        total: order.total,
         createdAt: format(order.createdAt, "MMM do, yyyy")
       }
     }))
