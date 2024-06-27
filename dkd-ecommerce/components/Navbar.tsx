@@ -6,7 +6,6 @@ import SearchBar from "@/components/navbar-components/SearchBar";
 import NavigationLinks from "@/components/navbar-components/NavigationLinks";
 import DropdownMenu from "@/components/navbar-components/DropdownMenu";
 import UserControls from "@/components/navbar-components/UserControls";
-import { usePathname } from "next/navigation";
 
 interface NavbarProps {
   collections: CollectionType[];
@@ -16,7 +15,6 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ collections, category }) => {
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState<ProductType[]>([]);
-  const pathname = usePathname();
 
   return (
     <div className="sticky top-0 z-50 py-2 px-10 flex gap-2 justify-between items-center bg-white shadow-xl max-sm:px-3">

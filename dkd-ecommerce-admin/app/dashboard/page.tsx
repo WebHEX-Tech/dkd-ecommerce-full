@@ -1,5 +1,8 @@
+import { DataTable } from "@/components/custom ui/DataTable";
 import OrderNotification from "@/components/custom ui/OrderNotif";
 import SalesChart from "@/components/custom ui/SalesChart";
+import TopCustomer from "@/components/custom ui/TopCustomer";
+import TopProducts from "@/components/custom ui/TopProducts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -79,6 +82,14 @@ export default async function Dashboard() {
           <SalesChart data={graphData} />
         </CardContent>
       </Card>
+
+      <Separator className="bg-gray-400 mt-8" />
+
+      <TopProducts />
+
+      <Separator className="bg-gray-400 mt-8" />
+
+      <TopCustomer />
     </div>
   );
 }
