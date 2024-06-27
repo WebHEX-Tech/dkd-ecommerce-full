@@ -36,6 +36,8 @@ const CollectionDetails = async ({
     {}
   );
 
+  console.log(productsByCategory)
+
   const hasProducts = Object.keys(productsByCategory).length > 0;
 
   return (

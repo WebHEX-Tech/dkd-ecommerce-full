@@ -38,7 +38,7 @@ const TopBar = () => {
 
   return (
     <div className="sticky top-0 z-20 w-full flex justify-between items-center px-8 py-4 bg-white shadow-2xl lg:hidden">
-      <Image src="/logo.png" alt="logo" width={100} height={30} />
+      <Image src="/standalone-logo.png" alt="logo" width={100} height={30} />
 
       <div className="flex gap-8 max-lg:hidden">
         {navLinks.map((link) => (

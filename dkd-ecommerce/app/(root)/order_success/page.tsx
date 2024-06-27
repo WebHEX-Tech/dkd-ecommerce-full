@@ -14,7 +14,7 @@ const SuccessfulOrder = () => {
   }, []);
 
   return (
-    <div className="h-screen flex flex-col justify-center items-center gap-5">
+    <div className="h-screen flex flex-col justify-center items-center gap-5 text-center">
       <p className="text-heading2-bold text-red-1">
         Placed Order Successfully!
       </p>
@@ -24,7 +24,7 @@ const SuccessfulOrder = () => {
           dkdmarketingcorp21@gmail.com
         </a>
       </p>
-      <div className="flex gap-4">
+      <div className="flex flex-col md:flex-row gap-4">
         <Link
           href="/"
           className="p-4 border text-base-bold hover:bg-green-600 hover:text-white"

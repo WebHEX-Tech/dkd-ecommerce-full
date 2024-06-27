@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
 
         // Fetch the latest notification
         const latestNotif = await NotificationOrder.findOne().sort({ createdAt: -1 });
-
+        
         if (latestNotif) {
           sendEvent(JSON.stringify(latestNotif));
         } else {

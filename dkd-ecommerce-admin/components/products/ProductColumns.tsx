@@ -36,6 +36,13 @@ export const columns: ColumnDef<ProductType>[] = [
     },
   },
   {
+    accessorKey: "sales",
+    header: "Sales",
+    cell: ({ row }) => {
+      return row.original.sales || 0;
+    },
+  },
+  {
     accessorKey: "stocks",
     header: "Stocks",
   },
@@ -46,11 +53,11 @@ export const columns: ColumnDef<ProductType>[] = [
       const stocks = row.original.stocks;
 
       if (stocks === 0) {
-        return <span className="bg-red-500 text-white py-1 px-3 rounded-2xl">Out of Stock</span>;
+        return <div className="bg-red-500 text-white py-1 px-3 rounded-2xl w-fit"><span>Out of Stock</span></div>;
       } else if (stocks < 10) {
-        return <span className="bg-yellow-500 text-white py-1 px-3 rounded-2xl">In Stock</span>;
+        return <div className="bg-yellow-500 text-white py-1 px-3 rounded-2xl w-fit"><span>In Stock</span></div>;
       } else {
-        return <span className="bg-green-500 text-white py-1 px-3 rounded-2xl">In Stock</span>;
+        return <div className="bg-green-500 text-white py-1 px-3 rounded-2xl w-fit"><span>In Stock</span></div>;
       }
     },
   },

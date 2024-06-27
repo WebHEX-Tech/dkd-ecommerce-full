@@ -62,11 +62,11 @@ const LoginForm = () => {
     <Form {...form}>
       <div className="my-5">
         <div className="flex-shrink-0 flex justify-center">
-          <Image src="/logo.png" alt="logo" height={120} width={150} priority />
+          <Image src="/standalone-logo.png" alt="logo" height={120} width={150} priority />
         </div>
         <h1 className="text-[20px] font-semibold">Login</h1>
         <p className=" font-light mt-0">
-          to continue to Admin - DKD Food Solutions{" "}
+          to continue to Admin - DKD Marketing{" "}
         </p>
       </div>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

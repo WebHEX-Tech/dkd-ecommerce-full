@@ -36,7 +36,7 @@ const ProductInfo = ({ productInfo }: { productInfo: ProductType }) => {
 
       <div className="flex gap-2">
         <p className="text-base-medium text-grey-1">Category:</p>
-        <p className="text-base-bold">{productInfo.category[0].title}</p>
+        <p className="text-base-bold">{productInfo.category && productInfo.category.length > 0 ? productInfo.category[0].title : "No Category"}</p>
       </div>
 
       <p className="text-heading3-bold">₱ {productInfo.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>

@@ -52,6 +52,12 @@ export async function POST(req: NextRequest) {
       const product = await Product.findById(productId);
       if (product) {
         product.stocks -= quantity;
+        if (product.sales === undefined) {
+          product.sales = 0;
+        }
+        
+        product.sales += quantity;
+
         if (product.stocks < 0) {
           return new NextResponse(
             `Not enough stock for product ${product.title}`,

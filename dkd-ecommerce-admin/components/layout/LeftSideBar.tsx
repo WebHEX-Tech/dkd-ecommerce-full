@@ -18,7 +18,7 @@ const LeftSideBar = () => {
   return (
     <div className="h-screen left-0 top-0 sticky p-0 flex flex-col gap-6 bg-white shadow-2xl max-lg:hidden">
       <div className="flex flex-col justify-center items-center pt-5">
-        <Image src="/logo.png" alt="logo" width={150} height={70} />
+        <Image src="/standalone-logo.png" alt="logo" width={150} height={70} />
         <h2 className="font-bold">Admin</h2>
       </div>
 

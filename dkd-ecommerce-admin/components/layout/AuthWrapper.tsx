@@ -9,16 +9,16 @@ interface AuthWrapperProps {
 }
 
 const AuthWrapper: React.FC<AuthWrapperProps> = ({ children }) => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (!session) {
-      router.push("/auth/sign-in");
-    } else {
+    if (status === "authenticated") {
       router.push("/");
+    } else if (status === "unauthenticated") {
+      router.push("/auth/sign-in");
     }
-  }, [session, router]);
+  }, [status, router]);
 
   return <>{children}</>;
 };

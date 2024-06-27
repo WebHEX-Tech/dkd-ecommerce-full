@@ -32,6 +32,7 @@ type ProductType = {
   sizes: [string];
   price: number;
   stocks: number;
+  sales: number;
   createdAt: Date;
   updatedAt: Date;
 }

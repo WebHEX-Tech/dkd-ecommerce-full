@@ -1,7 +1,7 @@
-import Gallery from "@/components/Gallery"
-import ProductCard from "@/components/ProductCard"
-import ProductInfo from "@/components/ProductInfo"
-import { getProductDetails, getRelatedProducts } from "@/lib/actions/actions"
+import Gallery from "@/components/Gallery";
+import ProductCard from "@/components/ProductCard";
+import ProductInfo from "@/components/ProductInfo";
+import { getProductDetails, getRelatedProducts } from "@/lib/actions/actions";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,8 +10,12 @@ import {
   BreadcrumbList,
 } from "@/components/ui/breadcrumb";
 
-const ProductDetails = async ({ params }: { params: { productId: string }}) => {
-  const productDetails = await getProductDetails(params.productId)
+const ProductDetails = async ({
+  params,
+}: {
+  params: { productId: string };
+}) => {
+  const productDetails = await getProductDetails(params.productId);
   const collectionTitle = productDetails.collections.map(
     (collection: ProductType) => collection.title
   );
@@ -24,11 +28,11 @@ const ProductDetails = async ({ params }: { params: { productId: string }}) => {
   const collectionId = productDetails.collections.map(
     (collection: ProductType) => collection._id
   );
-  const relatedProducts = await getRelatedProducts(params.productId)
+  const relatedProducts = await getRelatedProducts(params.productId);
 
   return (
     <>
-    <div className="w-full px-6 pt-6">
+      <div className="w-full px-6 pt-6">
         <Breadcrumb className="mb-4">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -37,13 +41,13 @@ const ProductDetails = async ({ params }: { params: { productId: string }}) => {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink href={`/collections/${collectionId}`}>
-                {collectionTitle} 
+                {collectionTitle}
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink href={`/category/${categoryId}`}>
-                {categoryTitle} 
+                {categoryTitle}
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
@@ -54,23 +58,23 @@ const ProductDetails = async ({ params }: { params: { productId: string }}) => {
         </Breadcrumb>
       </div>
 
-    <div className="flex justify-center items-start gap-16 py-10 px-5 max-md:flex-col max-md:items-center">
-      <Gallery productMedia={productDetails.media} />
-      <ProductInfo productInfo={productDetails} />
-    </div>
-
-    <div className="flex flex-col items-center px-10 pt-5 pb-20 max-md:px-3">
-      <p className="text-heading3-bold">Related Products</p>
-      <div className="flex flex-wrap gap-16 mx-auto mt-8">
-        {relatedProducts?.map((product: ProductType) => (
-          <ProductCard key={product._id} product={product} />
-        ))}
+      <div className="flex justify-center items-start gap-16 py-10 px-5 max-md:flex-col max-md:items-center">
+        <Gallery productMedia={productDetails.media} />
+        <ProductInfo productInfo={productDetails} />
       </div>
-    </div>
+
+      <div className="flex flex-col items-center px-10 pt-5 pb-20 max-md:px-3">
+        <p className="text-heading3-bold">Related Products</p>
+        <div className="flex flex-wrap gap-16 mx-auto mt-8">
+          {relatedProducts?.map((product: ProductType) => (
+            <ProductCard key={product._id} product={product} />
+          ))}
+        </div>
+      </div>
     </>
-  )
-}
+  );
+};
 
 export const dynamic = "force-dynamic";
 
-export default ProductDetails
+export default ProductDetails;

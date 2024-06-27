@@ -24,16 +24,17 @@ import MultiText from "../custom ui/MultiText";
 import MultiSelect from "../custom ui/MultiSelect";
 import Loader from "../custom ui/Loader";
 
+// Schema validation
 const formSchema = z.object({
-  title: z.string().min(2).max(50),
-  description: z.string().min(2).max(500).trim(),
+  title: z.string().min(2, { message: "Title must be at least 2 characters" }).max(50, { message: "Title must be at most 80 characters" }),
+  description: z.string().min(2, { message: "Description must be at least 2 characters" }).max(500, { message: "Description must be at most 500 characters" }).trim(),
   media: z.array(z.string()),
-  category: z.array(z.string()),
-  collections: z.array(z.string()),
+  category: z.array(z.string()).nonempty({ message: "Category is required" }),
+  collections: z.array(z.string()).nonempty({ message: "Collection is required" }),
   tags: z.array(z.string()),
   sizes: z.array(z.string()),
-  price: z.coerce.number().min(0.1),
-  stocks: z.coerce.number().min(0),
+  price: z.coerce.number().positive({ message: "Price must be a positive number" }),
+  stocks: z.coerce.number().min(0, { message: "Stocks cannot be negative" }).int({ message: "Stocks must be an integer" }),
 });
 
 interface ProductFormProps {
@@ -42,7 +43,6 @@ interface ProductFormProps {
 
 const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const router = useRouter();
-
   const [loading, setLoading] = useState(true);
   const [collections, setCollections] = useState<CollectionType[]>([]);
   const [category, setCategory] = useState<CategoryType[]>([]);
@@ -333,10 +333,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
               name="sizes"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Sizes</FormLabel>
+                  <FormLabel>Weight</FormLabel>
                   <FormControl>
                     <MultiText
-                      placeholder="Sizes"
+                      placeholder="Weight"
                       value={field.value}
                       onChange={(size) =>
                         field.onChange([...field.value, size])

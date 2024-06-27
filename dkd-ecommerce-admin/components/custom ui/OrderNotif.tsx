@@ -7,6 +7,7 @@ import Link from "next/link";
 
 interface Notification {
   id: string;
+  orderId: string;
   customerName: string;
   timestamp: Date;
 }
@@ -28,6 +29,7 @@ const OrderNotification = () => {
       const data = JSON.parse(event.data);
       const newNotification: Notification = {
         id: data._id,
+        orderId: data.orderId,
         customerName: data.customerName,
         timestamp: new Date(data.createdAt),
       };
@@ -121,7 +123,7 @@ const OrderNotification = () => {
                       {notification.customerName} placed an order
                     </p>
                     <p className="font-normal text-[14px] text-gray-500 truncate">
-                      Order ID: {notification.id}
+                      Order ID: {notification.orderId}
                     </p>
                     <p className="text-gray-400 text-[14px] mt-4">
                       {formatDistanceToNow(new Date(notification.timestamp))}{" "}

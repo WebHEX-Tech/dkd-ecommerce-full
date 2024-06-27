@@ -49,25 +49,35 @@ const Cart = () => {
               >
                 <div className="flex items-center">
                   <Image
-                    src={cartItem.item.media[0]}
+                    src={cartItem.item ? cartItem.item.media[0] : ""}
                     width={100}
                     height={100}
                     className="rounded-lg w-32 h-32 object-cover"
                     alt="product"
                   />
                   <div className="flex flex-col gap-3 ml-4">
-                    <p className="text-body-bold">{cartItem.item.title}</p>
+                    <p className="text-body-bold">
+                      {cartItem.item
+                        ? cartItem.item.title
+                        : "Product Not Found"}
+                    </p>
                     {cartItem.color && (
-                      <p className="text-small-medium">{cartItem.color}</p>
+                      <p className="text-small-medium">
+                        {cartItem.color || "Product Not Found"}
+                      </p>
                     )}
                     {cartItem.size && (
-                      <p className="text-small-medium">{cartItem.size}</p>
+                      <p className="text-small-medium">
+                        {cartItem.size || "Product Not Found"}
+                      </p>
                     )}
                     <p className="text-small-medium">
                       ₱
-                      {cartItem.item.price.toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                      })}
+                      {cartItem.item
+                        ? cartItem.item.price.toLocaleString("en-US", {
+                            minimumFractionDigits: 2,
+                          })
+                        : "Product Not Found"}
                     </p>
                     <p
                       className={`text-small-medium ${
@@ -76,7 +86,7 @@ const Cart = () => {
                           : "text-red-600"
                       }`}
                     >
-                      {cartItem.item.stocks > 0 ? `In Stock` : "Out of Stock"}
+                      {cartItem.item ? cartItem.item.stocks > 0 ? `In Stock` : "Out of Stock" : ""}
                     </p>
                   </div>
                 </div>
@@ -146,7 +156,7 @@ const Cart = () => {
           <span>Total Amount</span>
           <span>
             ₱{" "}
-            {totalRounded.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+            {totalRounded.toLocaleString("en-US", { minimumFractionDigits: 2 }) || ""}
           </span>
         </div>
         <button
