@@ -655,10 +655,10 @@ const Checkout = () => {
 
           <button
             type="submit"
-            className="bg-green-600 text-white rounded-md py-3 w-full text-center transform transition duration-300 hover:bg-green-700"
-            disabled={loading}
+            className="bg-red-700 text-white rounded-md py-3 w-full text-center transform transition duration-300 hover:bg-red-700 cursor-not-allowed"
+            disabled
           >
-            {loadingOrder ? "Placing Order..." : "Place Order"}
+            {loadingOrder ? "Placing Order..." : "Placing Order Under Maintenance"}
           </button>
         </div>
       </form>

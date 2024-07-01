@@ -13,33 +13,27 @@ import {
 const reviews = [
   {
     id: 1,
-    username: "John Doe",
+    username: "Da'yhang Ar-Liza",
     content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "Super lifesaver ang DKD Marketing. Nag-ikot na ako sa Zamboanga para maghanap ng needs ko for baking. Maraming salamat DKD Marketing.",
   },
   {
     id: 2,
-    username: "Jane Smith",
+    username: "Abzer Isahac Khama",
     content:
-      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "Best choices of products for starting a business.👌",
   },
   {
     id: 3,
-    username: "Alice Johnson",
+    username: "Fatima Sheila Bairulla",
     content:
-      "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+      "Thumbs up! Very accomodating ang mga staffs. Safe na safe dumating ang mga orders ko.😊",
   },
   {
     id: 4,
-    username: "Bob Anderson",
+    username: "Nolasco Terez",
     content:
-      "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  },
-  {
-    id: 5,
-    username: "Emily Brown",
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "Negosyong affordable prices.👍👍",
   },
 ];
 
@@ -71,6 +65,9 @@ const ReviewsCarousel = () => {
                       <div className="ml-2">
                         <p className="font-bold text-gray-800 text-[14px] md:text-[18px]">
                           {review.username}
+                        </p>
+                        <p className="font-bold text-gray-800 text-[14px] md:text-[18px]">
+                          ⭐⭐⭐⭐⭐
                         </p>
                       </div>
                     </div>

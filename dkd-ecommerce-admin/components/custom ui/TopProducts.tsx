@@ -44,18 +44,18 @@ const TopProducts = () => {
           {top3Products.map((product: any) => (
             <Card
               key={product._id}
-              className="flex rounded-lg shadow-md p-4 bg-white gap-4 border-blue-4"
+              className="flex flex-row md:flex-col xl:flex-row rounded-lg shadow-md p-4 bg-blue-4 gap-4 border-blue-4"
             >
               <Image
                 src={product.media[0]}
                 alt="product"
                 width={200}
                 height={250}
-                className="h-[130px] md:h-[200px] rounded-lg bg-white object-cover transform transition duration-300 group-hover:-translate-y-2"
+                className="h-[130px] md:h-[180px] rounded-lg bg-white object-cover transform transition duration-300 group-hover:-translate-y-2"
               />
               <div className="h-full flex justify-evenly flex-col">
                 <p className="md:text-heading3-bold font-bold text-[15px]">{product.title}</p>
-                <p className="text-sm text-gray-500 text-[18px]">{`Sales: ${product.sales}`}</p>
+                <p className="text-gray-500 text-[18px]">{`Sales: ${product.sales}`}</p>
               </div>
             </Card>
           ))}

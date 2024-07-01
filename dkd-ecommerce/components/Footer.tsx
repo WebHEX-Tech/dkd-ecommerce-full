@@ -21,12 +21,19 @@ const Footer = () => {
             <li className="flex gap-2">
               <Mail /> dkdmarketingcorp21@gmail.com
             </li>
-            <li className="flex gap-2">
+            <li className="flex gap-2 pb-2">
               <div className="w-6 h-6 flex-shrink-0">
                 <MapPinned />
               </div>
-              Fronting Smart Kids Learning Center, Maria Clara Lorenzo Lobregat
-              Highway, Zamboanga City, Zamboanga del Sur
+              <div>
+                <p className="border-b border-red-300 pb-2 mb-2">
+                  Main Branch: Fronting Smart Kids Learning Center, Maria Clara
+                  Lorenzo Lobregat Highway, Zamboanga City, Zamboanga del Sur{" "}
+                </p>
+                <p>
+                  2nd Branch:  A, Lim Bldg, Alejo Alvarez St, San Jose, Zamboanga City, Zamboanga del Sur
+                </p>
+              </div>
             </li>
             <li className="flex gap-2">
               <Clock /> Mon-Sat, 8am-5pm
