@@ -311,7 +311,7 @@ const Checkout = () => {
               className="border p-3 rounded-md w-full mt-4"
             />
             <input
-              type="text"
+              type="number"
               name="phoneNumber"
               placeholder="Phone Number"
               value={formValues.phoneNumber}
@@ -655,7 +655,15 @@ const Checkout = () => {
 
           <button
             type="submit"
-            className="bg-red-700 text-white rounded-md py-3 w-full text-center transform transition duration-300 hover:bg-red-700 cursor-not-allowed"
+            className="bg-green-700 text-white rounded-md py-3 w-full text-center transform transition duration-300 hover:bg-green-600 cursor-pointer"
+            disabled={loadingOrder}
+          >
+            {loadingOrder ? "Placing Order..." : "Place Order (Testing)"}
+          </button>
+          
+          <button
+            type="submit"
+            className="bg-red-700 text-white rounded-md py-3 w-full text-center transform transition duration-300 hover:bg-red-800 cursor-not-allowed"
             disabled
           >
             {loadingOrder ? "Placing Order..." : "Placing Order Under Maintenance"}
